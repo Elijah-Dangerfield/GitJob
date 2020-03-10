@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/jobsFragment">
+
+    <fragment
+        android:id="@+id/jobsFragment"
+        android:name="com.dangerfield.gitjob.JobsFragment"
+        android:label="fragment_jobs"
+        tools:layout="@layout/fragment_jobs" >
+        <action
+            android:id="@+id/action_jobsFragment_to_savedJobsFragment"
+            app:destination="@id/savedJobsFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/savedJobsFragment"
+        android:name="com.dangerfield.gitjob.SavedJobsFragment"
+        android:label="fragment_saved_jobs"
+        tools:layout="@layout/fragment_saved_jobs" />
+</navigation>
