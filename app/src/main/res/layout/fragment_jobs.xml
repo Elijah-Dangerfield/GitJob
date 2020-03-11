@@ -8,25 +8,37 @@
     android:background="#F7F7F7">
 
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_jobs"
-        android:layout_width="0dp"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_layout"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:layout_constraintVertical_bias="0.0" />
+        android:animateLayoutChanges="true"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="0dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_jobs"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+           />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/toolbar_view"
         android:layout_width="wrap_content"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@android:color/white"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -35,13 +47,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="5dp"
-        android:text="Nashville"
         android:textColor="@android:color/black"
         android:textSize="24sp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/rv_jobs"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_view"
         app:layout_constraintStart_toEndOf="@+id/imageView"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/toolbar_view" />
 
     <ImageView
         android:id="@+id/imageView"
@@ -52,9 +63,9 @@
         android:layout_marginBottom="12dp"
         android:elevation="5dp"
         android:src="@drawable/ic_location_pin"
-        app:layout_constraintBottom_toTopOf="@+id/rv_jobs"
-        app:layout_constraintStart_toStartOf="@+id/view"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_view"
+        app:layout_constraintStart_toStartOf="@+id/toolbar_view"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_view" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -74,9 +85,9 @@
         android:layout_marginEnd="12dp"
         android:elevation="5dp"
         android:src="@drawable/ic_search"
-        app:layout_constraintBottom_toTopOf="@+id/rv_jobs"
-        app:layout_constraintEnd_toEndOf="@+id/view"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_view"
+        app:layout_constraintEnd_toEndOf="@+id/toolbar_view"
+        app:layout_constraintTop_toTopOf="@+id/toolbar_view" />
 
     <ImageButton
         android:id="@+id/btn_filter"
@@ -86,7 +97,7 @@
         android:background="@null"
         android:elevation="5dp"
         android:src="@drawable/ic_filter"
-        app:layout_constraintBottom_toTopOf="@+id/rv_jobs"
+        app:layout_constraintBottom_toBottomOf="@+id/toolbar_view"
         app:layout_constraintEnd_toStartOf="@+id/imageButton"
-        app:layout_constraintTop_toTopOf="@+id/view" />
+        app:layout_constraintTop_toTopOf="@+id/toolbar_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

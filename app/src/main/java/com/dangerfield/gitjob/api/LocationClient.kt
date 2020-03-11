@@ -3,8 +3,8 @@ package com.dangerfield.gitjob.api
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-object RetrofitBuilder {
-    private const val BASE_URL = "https://jobs.github.com/"
+object LocationClient {
+    private const val BASE_URL = "http://www.mapquestapi.com/"
 
     private val retrofitBuilder: Retrofit.Builder by lazy {
         Retrofit.Builder()
@@ -12,9 +12,10 @@ object RetrofitBuilder {
             .addConverterFactory(GsonConverterFactory.create())
     }
 
-    val apiService: ApiService by lazy {
+    val apiService: LocationsApi by lazy {
         retrofitBuilder
             .build()
-            .create(ApiService::class.java)
+            .create(LocationsApi::class.java)
+
     }
 }
