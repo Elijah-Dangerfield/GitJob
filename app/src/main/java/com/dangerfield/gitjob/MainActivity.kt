@@ -7,6 +7,9 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
+import com.dangerfield.gitjob.ui.FiltersModal
+import com.dangerfield.gitjob.util.BottomNavigationManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -15,7 +18,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val navController = nav_host_fragment.findNavController()
-        NavigationUI.setupWithNavController(bottom_navigation, navController)
+        bottom_navigation
+            .setOnNavigationItemSelectedListener(
+                BottomNavigationManager(this, R.id.content).itemSelectedListener
+            )
+
+
     }
 }

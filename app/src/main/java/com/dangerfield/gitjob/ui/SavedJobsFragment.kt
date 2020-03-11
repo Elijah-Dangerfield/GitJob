@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob
+package com.dangerfield.gitjob.ui
 
 
 import android.os.Bundle
@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.dangerfield.gitjob.R
 
 /**
  * A simple [Fragment] subclass.
