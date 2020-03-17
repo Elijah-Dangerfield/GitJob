@@ -5,6 +5,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.dangerfield.gitjob.model.JobListing
 
 /**
  * A generic class that can provide a resource backed by both the sqlite database and the network.
@@ -59,8 +60,23 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
                 is ApiResponse.Success -> {
                     Log.d("Elijah","Got success in network bound resource refresh")
 
+                    var count = 0
+                    (response.data!! as List<JobListing>).forEach { if(it.saved == true) count++ }
+                    Log.d("Elijah", "saving call with $count items marked as saved")
+
 
                     saveCallResult(response.data!!)
+                    /*
+                    So the problem with the searching and with the saving/hearting happens here.
+                    I am saving the call and then loading from the db expecting those changes to be there
+                    or at least propagte to it. But they arent. Loading from the db uses the previous data.
+                    what was there before the saved call. When I refresh again i loads from db again and then has the right data.
+                    Im assuming this is either some weird thing with live data or a race condition where it doesnt get saved in time
+                    and for some reason the call doesnt propagate.
+
+                    tomorrow: remove all the saving logic and just test with searching and such.
+                     */
+
                     val dbSource = loadFromDb()
                     result.addSource(dbSource) { newData ->
                         setValue(Resource.Success(newData))

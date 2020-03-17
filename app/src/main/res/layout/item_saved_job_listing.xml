@@ -56,8 +56,8 @@
 
     <ImageButton
         android:id="@+id/ib_details"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
         android:background="@drawable/ic_more"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

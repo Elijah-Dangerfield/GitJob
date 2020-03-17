@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.api.GitHubErrorMessage
+import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.hasLocationPermission
@@ -18,6 +19,9 @@ import com.dangerfield.gitjob.util.requestLocationPermission
 import com.google.android.gms.location.LocationServices
 
 import kotlinx.android.synthetic.main.fragment_jobs.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
@@ -125,8 +129,16 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
             swipe_refresh_layout.isRefreshing = (it is Resource.Loading)
 
             when (it) {
-                is Resource.Success -> {jobsAdapter.jobs = it.data ?: listOf()
+                is Resource.Success -> {
                     Log.d("Elijah", "done loading with result size: " + it.data?.size )
+                    var count = 0
+                    it.data!!.forEach { if(it.saved == true) count++ }
+                    Log.d("Elijah", "sending list to adapter with $count items marked as saved")
+
+                    jobsAdapter.jobs = it.data ?: listOf()
+
+
+
 
                 }
                 is Resource.Loading ->  Log.d("Elijah", "loading: ")

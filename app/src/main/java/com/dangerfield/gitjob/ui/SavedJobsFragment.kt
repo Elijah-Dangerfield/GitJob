@@ -31,5 +31,4 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs) {
         rv_saved_jobs.adapter = savedJobsAdapter
     }
 
-
 }

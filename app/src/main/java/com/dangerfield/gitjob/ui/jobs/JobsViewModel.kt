@@ -30,6 +30,7 @@ class JobsViewModel(val repository: Repository) : ViewModel(),
 
     fun getSearchTerm() = searchTerm
 
+
     fun getJobs(): MutableLiveData<Resource<List<JobListing>>> {
         Log.d("Elijah", "getting jobs with location: "+ location.value + " and term: " + searchTerm.value)
 

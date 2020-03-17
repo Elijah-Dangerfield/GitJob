@@ -20,7 +20,7 @@ data class JobListing(
     var title: String? = null,
     var type: String? = null,
     var url: String? = null,
-   @Ignore  var saved: Boolean? = false
+    var saved: Boolean? = false
 ) : Parcelable {
     constructor() : this(
         "","","","","","","","","","",""

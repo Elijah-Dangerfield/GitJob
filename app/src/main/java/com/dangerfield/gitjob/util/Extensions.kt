@@ -11,6 +11,9 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 
 fun hasLocationPermission(context: Context) =
     (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -57,4 +60,8 @@ fun EditText.openKeyboard() {
     this.requestFocus()
     val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
+}
+
+suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
+    map { async { f(it) } }.awaitAll()
 }

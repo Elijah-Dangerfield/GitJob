@@ -10,8 +10,10 @@ import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
 import com.dangerfield.gitjob.model.mapquest.LatLng
 import com.dangerfield.gitjob.model.mapquest.MapQuestResult
+import com.dangerfield.gitjob.util.pmap
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -77,7 +79,7 @@ class Repository(application: Application): GitJobsRepository {
 
 
     private fun writeToDataBase(listings: List<JobListing>?) {
-            CoroutineScope(Dispatchers.IO ).launch {
+            CoroutineScope(IO ).launch {
                 db.mainDao().updateAll(listings ?: listOf())
             }
     }
@@ -111,7 +113,13 @@ class Repository(application: Application): GitJobsRepository {
             ) {
                 if (response.isSuccessful) {
                     if((response.body()?.size ?: 0) > 0) {
-                        result.postValue(ApiResponse.Success(response.body()!!))
+                        CoroutineScope(IO).launch {
+                            val value = processListingResponse(response.body()!!)
+                            var count = 0
+                            value.forEach { if(it.saved == true) count++ }
+                            Log.d("Elijah", "Posting api call success with $count items marked as saved")
+                            result.postValue(ApiResponse.Success(value))
+                        }
                     }else {
                         val value : ApiResponse<List<JobListing>> =
                             if(description == null) ApiResponse.Empty(
@@ -130,6 +138,15 @@ class Repository(application: Application): GitJobsRepository {
         })
 
         return result
+    }
+
+    suspend fun processListingResponse(response: List<JobListing> ): List<JobListing> {
+        var count = 0
+         return response.pmap {
+             it.saved = queryForSavedJob(it).isNotEmpty()
+             Log.d("Elijah", "processed the ${++count} query with saved = ${it.saved} ")
+             it
+         }
     }
 
     override fun getCity(location: Location): MutableLiveData<Resource<String>> {
@@ -158,18 +175,22 @@ class Repository(application: Application): GitJobsRepository {
         return result
     }
 
+    suspend fun queryForSavedJob(job: JobListing) : List<SavedJob> {
+        return db.mainDao().querySavedJob(job.id)
+    }
+
     override fun getSavedJobs(): LiveData<List<SavedJob>> {
         return db.mainDao().getAllSavedJobs()
     }
 
     fun saveJob(jobListing: SavedJob) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(IO).launch {
             db.mainDao().insertSavedJob(jobListing)
         }
     }
 
     fun unsaveJob(jobListing: SavedJob) {
-        CoroutineScope(Dispatchers.IO).launch {
+        CoroutineScope(IO).launch {
 
             db.mainDao().deleteSavedJob(jobListing.id)
         }

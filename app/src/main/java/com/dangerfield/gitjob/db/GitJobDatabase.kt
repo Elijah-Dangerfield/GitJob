@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
 
-@Database(entities = [JobListing::class, SavedJob::class], version = 3, exportSchema = false)
+@Database(entities = [JobListing::class, SavedJob::class], version = 4, exportSchema = false)
 abstract class GitJobDatabase : RoomDatabase() {
     abstract fun mainDao(): JobListingsDao
 

@@ -28,7 +28,7 @@ interface JobListingsDao {
     fun insertSavedJob(savedJob: SavedJob)
 
     @Query("SELECT * from SAVED_JOB_LISTINGS WHERE id = :withID")
-    fun querySavedJob(withID: String): List<SavedJob>
+    suspend fun querySavedJob(withID: String): List<SavedJob>
 
     @Query("DELETE from SAVED_JOB_LISTINGS WHERE id = :withID")
     fun deleteSavedJob(withID: String)

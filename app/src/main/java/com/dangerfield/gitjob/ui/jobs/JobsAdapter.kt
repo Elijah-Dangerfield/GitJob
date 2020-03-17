@@ -1,6 +1,7 @@
 package com.dangerfield.gitjob.ui.jobs
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,11 +15,12 @@ import com.like.LikeButton
 import com.like.OnLikeListener
 import kotlinx.android.synthetic.main.item_job_listing.view.*
 
-class JobsAdapter(private val context: Context, val saver: ListingSaver): RecyclerView.Adapter<JobsAdapter.ViewHolder>() {
+class JobsAdapter(private val context: Context, val persistance: ListingSaver): RecyclerView.Adapter<JobsAdapter.ViewHolder>() {
 
     var jobs = listOf<JobListing>()
     set(value) {
         field = value
+        Log.d("Elijah", "Set list in adapter")
         notifyDataSetChanged()
     }
 
@@ -31,11 +33,13 @@ class JobsAdapter(private val context: Context, val saver: ListingSaver): Recycl
         init {
             saveButton.setOnLikeListener(object: OnLikeListener {
                 override fun liked(likeButton: LikeButton?) {
-                    saver.saveListing(jobs[adapterPosition])
+                    persistance.saveListing(jobs[adapterPosition])
+                    jobs[adapterPosition].saved = true
                     notifyDataSetChanged()
                 }
                 override fun unLiked(likeButton: LikeButton?) {
-                    saver.unsaveListing(jobs[adapterPosition])
+                    persistance.unsaveListing(jobs[adapterPosition])
+                    jobs[adapterPosition].saved = false
                     notifyDataSetChanged()
                 }
             })
@@ -51,6 +55,8 @@ class JobsAdapter(private val context: Context, val saver: ListingSaver): Recycl
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val job = jobs[position]
+
+        holder.saveButton.isLiked = job.saved == true
 
         holder.apply {
             positionTitle.text = job.title
