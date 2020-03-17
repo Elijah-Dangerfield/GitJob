@@ -20,8 +20,9 @@ import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.hasLocationPermission
 import com.dangerfield.gitjob.util.requestLocationPermission
 import com.google.android.gms.location.LocationServices
-
 import kotlinx.android.synthetic.main.fragment_jobs.*
+import kotlinx.android.synthetic.main.tool_bar_searched_term.view.*
+import kotlinx.android.synthetic.main.toolbar_jobs.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class JobsFragment: Fragment(R.layout.fragment_jobs),
@@ -96,7 +97,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         jobsViewModel.getLocation().observe(viewLifecycleOwner, Observer {
             Log.d("Elijah", "Got new location string: $it")
 
-            tv_location.text =
+            included_toolbar.tv_location.text =
                 if(it.isNullOrEmpty()) resources.getString(R.string.app_name) else it
         })
     }
@@ -106,12 +107,12 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
     private fun setupViews() {
         rv_jobs.layoutManager = LinearLayoutManager(context)
         rv_jobs.adapter = jobsAdapter
-        btn_filter.setOnClickListener { filterSheet.show(parentFragmentManager, "filters") }
-        location_view.setOnClickListener {
+        included_toolbar.btn_filter.setOnClickListener { filterSheet.show(parentFragmentManager, "filters") }
+        included_toolbar.location_view.setOnClickListener {
             newLocationChangeFragment().show(parentFragmentManager, "location_change")
         }
 
-        ib_search.setOnClickListener { navigateToSearch() }
+        included_toolbar.ib_search.setOnClickListener { navigateToSearch() }
 
         swipe_refresh_layout.setColorSchemeResources(
             R.color.colorPrimary, android.R.color.holo_blue_light
@@ -120,7 +121,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
 
         swipe_refresh_layout.setOnRefreshListener { jobsViewModel.refreshListings()}
 
-        ib_clear_search_term.setOnClickListener {
+        included_toolbar_searched_term.ib_clear_search_term.setOnClickListener {
             jobsViewModel.setSearchTerm(null)
         }
     }
@@ -130,21 +131,8 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
             swipe_refresh_layout.isRefreshing = (it is Resource.Loading)
 
             when (it) {
-                is Resource.Success -> {
-                    Log.d("Elijah", "done loading with result size: " + it.data?.size )
-                    var count = 0
-                    it.data!!.forEach { if(it.saved == true) count++ }
-                    Log.d("Elijah", "sending list to adapter with $count items marked as saved")
-
-                    jobsAdapter.jobs = it.data ?: listOf()
-
-
-
-
-                }
-                is Resource.Loading ->  Log.d("Elijah", "loading: ")
+                is Resource.Success ->  jobsAdapter.jobs = it.data!!
                 is Resource.Error -> {
-                    Log.d("Elijah", "error: " + it.message)
                     if(it.errorType == GitHubErrorMessage.BAD_LOCATION) {
                         jobsViewModel.setLocation(null)
                     }else if (it.errorType == GitHubErrorMessage.BAD_SEARCH) {
@@ -158,8 +146,8 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
 
     private fun observeSearchTerm() {
         jobsViewModel.getSearchTerm().observe(viewLifecycleOwner, Observer {
-            toolbar_search_term.goneIf(it.isNullOrEmpty())
-            if(!it.isNullOrEmpty()) tv_search_term.text = "\"$it\""
+            included_toolbar_searched_term.goneIf(it.isNullOrEmpty())
+            if(!it.isNullOrEmpty()) included_toolbar_searched_term.tv_search_term.text = "\"$it\""
         })
     }
 
@@ -180,7 +168,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
                             is Resource.Error ->  {
                                 Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
                                 jobsViewModel.setLocation(null)
-                                tv_location.text = resources.getString(R.string.app_name)
+                                included_toolbar.tv_location.text = resources.getString(R.string.app_name)
                                 Log.d("Elijah", "error getting user city: " + response.message)
                             }
 
