@@ -76,17 +76,18 @@
 
     <EditText
         android:id="@+id/input_location"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:background="@null"
+        android:hint="Enter city or zip code"
         android:imeOptions="actionSearch"
         android:inputType="text"
-        android:hint="Enter city or zip code"
         android:maxLines="1"
         android:textColor="@android:color/black"
         android:textColorHint="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+        app:layout_constraintEnd_toStartOf="@+id/ib_clear_text"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toTopOf="@+id/imageView3" />
 

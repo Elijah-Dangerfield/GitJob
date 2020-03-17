@@ -4,6 +4,7 @@ import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.ui.SavedJobsViewModel
 import com.dangerfield.gitjob.ui.jobs.JobsViewModel
 import com.dangerfield.gitjob.ui.jobs.LocationChangeViewModel
+import com.dangerfield.gitjob.ui.jobs.SearchViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -20,5 +21,8 @@ val viewModelModule = module {
     viewModel { LocationChangeViewModel() }
 
     viewModel { SavedJobsViewModel(get()) }
+
+    viewModel { SearchViewModel(get()) }
+
 
 }

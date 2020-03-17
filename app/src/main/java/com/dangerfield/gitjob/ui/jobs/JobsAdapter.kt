@@ -20,7 +20,6 @@ class JobsAdapter(private val context: Context, val persistance: ListingSaver): 
     var jobs = listOf<JobListing>()
     set(value) {
         field = value
-        Log.d("Elijah", "Set list in adapter")
         notifyDataSetChanged()
     }
 

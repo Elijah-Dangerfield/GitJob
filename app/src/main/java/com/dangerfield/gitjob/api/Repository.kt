@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import com.dangerfield.gitjob.db.GitJobDatabase
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
+import com.dangerfield.gitjob.model.SearchedTerm
 import com.dangerfield.gitjob.model.mapquest.LatLng
 import com.dangerfield.gitjob.model.mapquest.MapQuestResult
 import com.dangerfield.gitjob.util.pmap
@@ -82,9 +83,7 @@ class Repository(application: Application): GitJobsRepository {
             }
     }
 
-    private fun getFromDb(): LiveData<List<JobListing>> {
-        return db.mainDao().getAll()
-    }
+    private fun getFromDb(): LiveData<List<JobListing>> = db.mainDao().getAll()
 
     fun getListingsFromApi(location: String? = null,
                            description: String? = null): LiveData<ApiResponse<List<JobListing>>> {
@@ -188,8 +187,22 @@ class Repository(application: Application): GitJobsRepository {
 
     fun unsaveJob(jobListing: SavedJob) {
         CoroutineScope(IO).launch {
-
             db.mainDao().deleteSavedJob(jobListing.id)
+        }
+    }
+
+
+    fun getSearchedTerms() = db.mainDao().getAllSearchedTerms()
+
+    fun removeSearchTerm(search: SearchedTerm) {
+        CoroutineScope(IO).launch {
+            db.mainDao().deleteSearchedTerm(search.term.trim())
+        }
+    }
+
+    fun saveSearchTerm(term: SearchedTerm) {
+        CoroutineScope(IO).launch {
+            db.mainDao().insertSearchedTerm(term)
         }
     }
 }

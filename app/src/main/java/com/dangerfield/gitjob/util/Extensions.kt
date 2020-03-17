@@ -26,7 +26,7 @@ fun Fragment.requestLocationPermission(reqCode: Int) {
     requestPermissions(arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION), reqCode)
 }
 
-fun View.hideKeyBoardOnPressAway(){
+fun View.setHideKeyBoardOnPressAway(){
     this.onFocusChangeListener = keyboardHider
 }
 

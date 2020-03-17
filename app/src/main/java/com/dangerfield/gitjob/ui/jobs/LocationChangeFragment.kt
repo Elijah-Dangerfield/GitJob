@@ -8,7 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
 import androidx.fragment.app.DialogFragment
 import com.dangerfield.gitjob.R
-import com.dangerfield.gitjob.util.hideKeyBoardOnPressAway
+import com.dangerfield.gitjob.util.setHideKeyBoardOnPressAway
 import kotlinx.android.synthetic.main.fragment_location_change.*
 import android.widget.TextView
 import androidx.lifecycle.Observer
@@ -63,7 +63,7 @@ class LocationChangeFragment : DialogFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         ib_close.setOnClickListener { this.dismiss() }
-        input_location.hideKeyBoardOnPressAway()
+        input_location.setHideKeyBoardOnPressAway()
 
         input_location.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(view: TextView?, actionID: Int, event: KeyEvent?): Boolean {
