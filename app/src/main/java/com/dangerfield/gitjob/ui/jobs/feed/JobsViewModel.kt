@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.feed
 
 import android.location.Location
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,8 @@ import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.model.JobListing
 
-class JobsViewModel(private val repository: Repository) : ViewModel(), ListingSaver {
+class JobsViewModel(private val repository: Repository) : ViewModel(),
+    ListingSaver {
 
 
     private var jobs = MutableLiveData<Resource<List<JobListing>>>()

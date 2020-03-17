@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.feed
 
 import com.dangerfield.gitjob.model.JobListing
 

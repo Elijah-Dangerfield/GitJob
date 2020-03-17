@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.search
 
 
 import android.content.Context

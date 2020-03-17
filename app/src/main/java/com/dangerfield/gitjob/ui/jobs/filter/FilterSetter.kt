@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.filter
 
 interface FilterSetter {
     fun onSetFilter(filter: String? = null)

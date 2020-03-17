@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.feed
 
 
 import android.app.Activity
@@ -11,20 +11,21 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.api.GitHubErrorMessage
-import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.api.Resource
+import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
+import com.dangerfield.gitjob.ui.jobs.filter.FiltersModal
+import com.dangerfield.gitjob.ui.jobs.location.LocationChangeFragment
+import com.dangerfield.gitjob.ui.jobs.search.SearchFragment
 import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.hasLocationPermission
 import com.dangerfield.gitjob.util.requestLocationPermission
 import com.google.android.gms.location.LocationServices
 
 import kotlinx.android.synthetic.main.fragment_jobs.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.launch
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
+class JobsFragment: Fragment(R.layout.fragment_jobs),
+    FilterSetter {
 
     private val jobsAdapter: JobsAdapter by lazy {
         JobsAdapter(
@@ -157,8 +158,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
 
     private fun observeSearchTerm() {
         jobsViewModel.getSearchTerm().observe(viewLifecycleOwner, Observer {
-            tv_search_term.goneIf(it.isNullOrEmpty())
-            ib_clear_search_term.goneIf(it.isNullOrEmpty())
+            toolbar_search_term.goneIf(it.isNullOrEmpty())
             if(!it.isNullOrEmpty()) tv_search_term.text = "\"$it\""
         })
     }

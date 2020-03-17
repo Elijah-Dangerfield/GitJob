@@ -5,4 +5,50 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="saved">Saved</string>
     <string name="jobs">Jobs</string>
+
+    <string-array name="auto_complete_list">
+        <item>python</item>
+        <item>android</item>
+        <item>ios</item>
+        <item>ruby</item>
+        <item>php</item>
+        <item>c++</item>
+        <item>architect</item>
+        <item>junior</item>
+        <item>senior</item>
+        <item>senior android</item>
+        <item>senior ios</item>
+        <item>junior android</item>
+        <item>junior ios</item>
+        <item>java</item>
+        <item>machine learning</item>
+        <item>data analyst</item>
+        <item>scala</item>
+        <item>manager</item>
+        <item>scrum master</item>
+        <item>lyft</item>
+        <item>uber</item>
+        <item>amazon</item>
+        <item>facebook</item>
+        <item>netflix</item>
+        <item>fang</item>
+        <item>systems</item>
+        <item>front end</item>
+        <item>developer</item>
+        <item>backend</item>
+        <item>back end</item>
+        <item>cyber</item>
+        <item>cyber security</item>
+        <item>linux</item>
+        <item>unix</item>
+        <item>mobile</item>
+        <item>full stack</item>
+        <item>react</item>
+        <item>react native</item>
+        <item>rust</item>
+        <item>web</item>
+        <item>web developer</item>
+        <item>.NET</item>
+        <item>IT</item>
+    </string-array>
 </resources>

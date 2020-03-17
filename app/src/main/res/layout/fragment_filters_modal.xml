@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="50dp"
-        tools:context=".ui.jobs.FiltersModal">
+        tools:context=".ui.jobs.filter.FiltersModal">
 
         <Button
             android:id="@+id/btn_full_time"

@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorBackground"
     android:clickable="true"
-    tools:context=".ui.jobs.SearchFragment"
+    tools:context=".ui.jobs.search.SearchFragment"
     android:focusable="true">
 
     <View

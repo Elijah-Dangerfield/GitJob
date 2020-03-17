@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.search
 
 import androidx.lifecycle.ViewModel
 import com.dangerfield.gitjob.api.Repository
@@ -9,7 +9,8 @@ interface SearchTermPersister {
     fun saveSearchTerm(term: SearchedTerm)
 }
 
-class SearchViewModel(private val repository: Repository) : ViewModel(), SearchTermPersister {
+class SearchViewModel(private val repository: Repository) : ViewModel(),
+    SearchTermPersister {
 
     override fun removeSearchTerm(term: SearchedTerm) { repository.removeSearchTerm(term) }
 

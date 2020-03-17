@@ -3,7 +3,7 @@ package com.dangerfield.gitjob.util
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.dangerfield.gitjob.R
-import com.dangerfield.gitjob.ui.jobs.JobsFragment
+import com.dangerfield.gitjob.ui.jobs.feed.JobsFragment
 import com.dangerfield.gitjob.ui.SavedJobsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

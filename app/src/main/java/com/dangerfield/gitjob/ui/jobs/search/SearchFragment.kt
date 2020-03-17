@@ -1,7 +1,8 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.search
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.View
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.SearchedTerm
+import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.setHideKeyBoardOnPressAway
 import com.dangerfield.gitjob.util.onTextChanged
@@ -23,9 +25,18 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     lateinit var mFilterSetter: FilterSetter
-
+    private val terms: ArrayList<String> by lazy { ArrayList<String>(resources.getStringArray(R.array.auto_complete_list).asList())}
     private val searchAdapter: SearchJobsAdapter by lazy {
-        SearchJobsAdapter(context!!, searchViewModel) { term -> onSelectTerm(term)}
+        SearchJobsAdapter(
+            context!!,
+            searchViewModel
+        ) { term -> onSelectTerm(term) }
+    }
+
+    private val autoCompleteAdapter: AutoCompleteAdapter by lazy {
+        AutoCompleteAdapter(
+            context!!
+        ) { term -> onSelectTerm(term) }
     }
 
     private val searchViewModel : SearchViewModel by viewModel()
@@ -46,10 +57,15 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     private fun observeSearchedTerms() {
         searchViewModel.getSearchedTerms().observe(viewLifecycleOwner, Observer {
             searchAdapter.searches = it
+            it.forEach {searched ->
+                if(!terms.contains(searched.term.toLowerCase().trim())) { terms.add(searched.term.toLowerCase().trim())
+                }
+            }
         })
     }
 
     private fun setupViews() {
+
         ib_back.setOnClickListener { parentFragmentManager.popBackStackImmediate()}
 
         etv_search.openKeyboard()
@@ -69,7 +85,15 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         rv_search.layoutManager = LinearLayoutManager(context)
         rv_search.adapter = searchAdapter
 
-        etv_search.onTextChanged { ib_clear_text.goneIf(it.isEmpty()) }
+        etv_search.onTextChanged {
+            ib_clear_text.goneIf(it.isEmpty())
+            rv_search.adapter = if(it.isNotEmpty()) autoCompleteAdapter else searchAdapter
+            autoCompleteAdapter.terms = terms.filter {term ->
+                Log.d("Elijah", "filtering based on containing: ${etv_search.text.toString().trim().toLowerCase()}")
+                term.toLowerCase().contains(etv_search.text.toString().trim().toLowerCase())
+            }
+
+        }
         ib_clear_text.setOnClickListener { (etv_search as TextView).text = "" }
     }
 

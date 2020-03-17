@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui.jobs
+package com.dangerfield.gitjob.ui.jobs.location
 
 import android.os.Bundle
 import android.view.KeyEvent
@@ -12,6 +12,7 @@ import com.dangerfield.gitjob.util.setHideKeyBoardOnPressAway
 import kotlinx.android.synthetic.main.fragment_location_change.*
 import android.widget.TextView
 import androidx.lifecycle.Observer
+import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.onTextChanged
 import org.koin.android.viewmodel.ext.android.viewModel
@@ -55,7 +56,8 @@ class LocationChangeFragment : DialogFragment() {
             }
         })
 
-        locationChangeViewModel.userState.value = UserState.INITAL
+        locationChangeViewModel.userState.value =
+            UserState.INITAL
 
     }
 

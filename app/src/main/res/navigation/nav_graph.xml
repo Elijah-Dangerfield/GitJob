@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/jobsFragment"
-        android:name="com.dangerfield.gitjob.ui.jobs.JobsFragment"
+        android:name="com.dangerfield.gitjob.ui.jobs.feed.JobsFragment"
         android:label="fragment_jobs"
         tools:layout="@layout/fragment_jobs" >
         <action

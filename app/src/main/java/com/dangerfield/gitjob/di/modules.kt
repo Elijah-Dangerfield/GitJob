@@ -2,9 +2,9 @@ package com.dangerfield.gitjob.di
 
 import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.ui.SavedJobsViewModel
-import com.dangerfield.gitjob.ui.jobs.JobsViewModel
-import com.dangerfield.gitjob.ui.jobs.LocationChangeViewModel
-import com.dangerfield.gitjob.ui.jobs.SearchViewModel
+import com.dangerfield.gitjob.ui.jobs.feed.JobsViewModel
+import com.dangerfield.gitjob.ui.jobs.location.LocationChangeViewModel
+import com.dangerfield.gitjob.ui.jobs.search.SearchViewModel
 import org.koin.android.ext.koin.androidApplication
 import org.koin.android.viewmodel.dsl.viewModel
 import org.koin.dsl.module
