@@ -1,15 +1,13 @@
 package com.dangerfield.gitjob.ui.jobs
 
 import android.location.Location
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.model.JobListing
 
-class JobsViewModel(val repository: Repository) : ViewModel(),
-    ListingSaver {
+class JobsViewModel(private val repository: Repository) : ViewModel(), ListingSaver {
 
 
     private var jobs = MutableLiveData<Resource<List<JobListing>>>()
@@ -18,6 +16,7 @@ class JobsViewModel(val repository: Repository) : ViewModel(),
 
     fun setLocation(city: String?, refresh: Boolean? = null) {
         location.value = city
+
         if (refresh == true && city != null) refreshListings()
     }
 
@@ -32,10 +31,7 @@ class JobsViewModel(val repository: Repository) : ViewModel(),
 
 
     fun getJobs(): MutableLiveData<Resource<List<JobListing>>> {
-        Log.d("Elijah", "getting jobs with location: "+ location.value + " and term: " + searchTerm.value)
-
         if (jobs.value?.data.isNullOrEmpty()) {
-            Log.d("Elijah", "fetching new values")
              jobs =  repository.getJobs() as MutableLiveData<Resource<List<JobListing>>>
         }
         return jobs
@@ -45,10 +41,11 @@ class JobsViewModel(val repository: Repository) : ViewModel(),
 
 
     fun refreshListings(){
-        Log.d("Elijah", "refreshing with location: "+ location.value + " and term: " + searchTerm.value)
-        repository
-            .getJobs(location = location.value, description = searchTerm.value, refreshing = true)
-                as MutableLiveData<Resource<List<JobListing>>>
+        forceFetch(location = location.value, description = searchTerm.value)
+    }
+
+    private fun forceFetch(location : String? = null, description: String? = null) {
+        repository.forceFetchJobs(location, description)
     }
 
     override fun saveListing(listing: JobListing) {

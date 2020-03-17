@@ -73,7 +73,6 @@ dependencies {
     kapt "androidx.room:room-compiler:$room_version"
 
 
-
     // locations
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
@@ -82,6 +81,10 @@ dependencies {
 
     //Used for heart animation
     implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+
+    //used for HTML parsing
+    implementation 'org.jsoup:jsoup:1.9.1'
+
 
 
 

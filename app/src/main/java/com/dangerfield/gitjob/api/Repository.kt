@@ -11,6 +11,7 @@ import com.dangerfield.gitjob.model.SavedJob
 import com.dangerfield.gitjob.model.mapquest.LatLng
 import com.dangerfield.gitjob.model.mapquest.MapQuestResult
 import com.dangerfield.gitjob.util.pmap
+import com.dangerfield.gitjob.util.removeHtml
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
@@ -31,16 +32,6 @@ class Repository(application: Application): GitJobsRepository {
         abstract var location : String?
         abstract var description: String?
     }
-    /*
-    for now we will have one network bound resource, i would think we wouldnt wanna cache like searches and stuff.
-    so will will end up taking out description most likely and making searching a seperate thing
-    that isnt a network bound resource. But for now we will cache the most recent MAIN results with this
-    we will also end up caching the location with these so that we can show the data correctly while loading
-    and we will need top find a way to pass in the cached locaiton into the first call only.
-
-        TODO: i think a source isnt getting removed or something is happening with this object creation
-
-     */
 
      private val jobsResource = object :  NetworkBoundResource<List<JobListing>, GithubApiParams>() {
          override fun saveCallResult(item: List<JobListing>) {
@@ -62,7 +53,6 @@ class Repository(application: Application): GitJobsRepository {
      }
 
 
-
     override fun getJobs(
         location: String?,
         description: String?,
@@ -74,7 +64,15 @@ class Repository(application: Application): GitJobsRepository {
             override var description: String? = description
         }
 
-        return if (refreshing == true) jobsResource.refresh(params).asLiveData() else jobsResource.build(params).asLiveData()
+        return jobsResource.build(params).asLiveData()
+    }
+
+    fun forceFetchJobs( location: String?, description: String?) {
+        val params = object : GithubApiParams(){
+            override var location: String? = location
+            override var description: String? = description
+        }
+        jobsResource.refresh(params).asLiveData()
     }
 
 
@@ -141,10 +139,9 @@ class Repository(application: Application): GitJobsRepository {
     }
 
     suspend fun processListingResponse(response: List<JobListing> ): List<JobListing> {
-        var count = 0
          return response.pmap {
              it.saved = queryForSavedJob(it).isNotEmpty()
-             Log.d("Elijah", "processed the ${++count} query with saved = ${it.saved} ")
+             it.description = it.description?.removeHtml()
              it
          }
     }
