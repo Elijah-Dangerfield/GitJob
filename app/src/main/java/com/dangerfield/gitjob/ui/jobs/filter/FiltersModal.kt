@@ -8,7 +8,7 @@ import android.view.ViewGroup
 
 import com.dangerfield.gitjob.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.android.synthetic.main.fragment_filters_modal.*
+import kotlinx.android.synthetic.main.modal_jobs_filter.*
 
 class FiltersModal : BottomSheetDialogFragment() {
 
@@ -19,7 +19,7 @@ class FiltersModal : BottomSheetDialogFragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.fragment_filters_modal, container, false)
+        val view = inflater.inflate(R.layout.modal_jobs_filter, container, false)
 //        view.clipToOutline = true
         return view
     }

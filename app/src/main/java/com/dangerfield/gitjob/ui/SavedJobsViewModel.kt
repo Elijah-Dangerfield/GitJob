@@ -5,9 +5,11 @@ import androidx.lifecycle.ViewModel
 import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.model.SavedJob
 
-class SavedJobsViewModel(val repository: Repository) : ViewModel() {
+class SavedJobsViewModel(private val repository: Repository) : ViewModel() {
 
 
      val getSavedJobs = { repository.getSavedJobs() }
+
+     fun deleteSavedJob(savedJob: SavedJob) { repository.unsaveJob(savedJob) }
 
 }

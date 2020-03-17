@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -12,8 +13,13 @@ import com.bumptech.glide.Glide
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.SavedJob
 import kotlinx.android.synthetic.main.item_saved_job_listing.view.*
+interface OptionsPresenter{
+    fun presentOptions(savedJob: SavedJob)
+    fun onShare(savedJob: SavedJob)
+    fun onDelete(savedJob: SavedJob)
+}
 
-class SavedJobsAdapter(private val context: Context): RecyclerView.Adapter<SavedJobsAdapter.ViewHolder>() {
+class SavedJobsAdapter(private val context: Context, private val optionsPresenter: OptionsPresenter): RecyclerView.Adapter<SavedJobsAdapter.ViewHolder>() {
 
     var jobs = listOf<SavedJob>()
         set(value) {
@@ -25,6 +31,13 @@ class SavedJobsAdapter(private val context: Context): RecyclerView.Adapter<Saved
         val companyLogo: ImageView = view.iv_logo
         val positionTitle: TextView = view.tv_job_title
         val description: TextView = view.tv_job_description
+        val options: ImageButton = view.ib_details
+
+        init {
+            options.setOnClickListener {
+                optionsPresenter.presentOptions(jobs[adapterPosition])
+            }
+        }
 
     }
 
