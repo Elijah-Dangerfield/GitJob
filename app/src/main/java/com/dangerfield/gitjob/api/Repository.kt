@@ -1,31 +1,108 @@
 package com.dangerfield.gitjob.api
 
+import android.app.Application
 import android.location.Location
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.dangerfield.gitjob.db.GitJobDatabase
 import com.dangerfield.gitjob.model.JobListing
+import com.dangerfield.gitjob.model.SavedJob
 import com.dangerfield.gitjob.model.mapquest.LatLng
 import com.dangerfield.gitjob.model.mapquest.MapQuestResult
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import kotlin.coroutines.coroutineContext
 
-object Repository: GitJobsRepository {
+class Repository(application: Application): GitJobsRepository {
 
     private val apiKey = "qoPCzFujaMkzRvdkprCGAfpaVwJy2Phn"
+    private val db = GitJobDatabase(application)
+
+
+    abstract class GithubApiParams {
+        abstract var location : String?
+        abstract var description: String?
+    }
+    /*
+    for now we will have one network bound resource, i would think we wouldnt wanna cache like searches and stuff.
+    so will will end up taking out description most likely and making searching a seperate thing
+    that isnt a network bound resource. But for now we will cache the most recent MAIN results with this
+    we will also end up caching the location with these so that we can show the data correctly while loading
+    and we will need top find a way to pass in the cached locaiton into the first call only.
+
+        TODO: i think a source isnt getting removed or something is happening with this object creation
+
+     */
+
+     private val jobsResource = object :  NetworkBoundResource<List<JobListing>, GithubApiParams>() {
+         override fun saveCallResult(item: List<JobListing>) {
+             writeToDataBase(item)
+         }
+
+         override fun shouldFetch(data: List<JobListing>?): Boolean {
+             return true
+         }
+
+         override fun loadFromDb(): LiveData<List<JobListing>> {
+             return getFromDb()
+         }
+
+         override fun createCall(params: GithubApiParams): LiveData<ApiResponse<List<JobListing>>> {
+             Log.d("Elijah", "Actually calling api with location: " + params.location + " and desc: " + params.description)
+             return getListingsFromApi(params.location, params.description)
+         }
+     }
+
+
 
     override fun getJobs(
         location: String?,
-        description: String?
-    ): MutableLiveData<Resource<List<JobListing>>> {
-        val result = MutableLiveData<Resource<List<JobListing>>>()
+        description: String?,
+        refreshing: Boolean?
+    ): LiveData<Resource<List<JobListing>>> {
 
-        result.postValue(Resource.Loading())
+        val params = object : GithubApiParams(){
+            override var location: String? = location
+            override var description: String? = description
+        }
 
-        JobsClient.apiService.getListings().enqueue(object:
-            Callback<List<JobListing>> {
+        return if (refreshing == true) jobsResource.refresh(params).asLiveData() else jobsResource.build(params).asLiveData()
+    }
+
+
+    private fun writeToDataBase(listings: List<JobListing>?) {
+            CoroutineScope(Dispatchers.IO ).launch {
+                db.mainDao().updateAll(listings ?: listOf())
+            }
+    }
+
+    private fun getFromDb(): LiveData<List<JobListing>> {
+        return db.mainDao().getAll()
+    }
+
+    fun getListingsFromApi(location: String? = null,
+                           description: String? = null): LiveData<ApiResponse<List<JobListing>>> {
+
+        val result = MutableLiveData<ApiResponse<List<JobListing>>>()
+
+        if(!Connectivity.isOnline) {
+            result.postValue(ApiResponse.Error(null, ""))
+            return result
+        }
+
+        JobsClient.apiService.getListings(location = location, description = description)
+            .enqueue(object: Callback<List<JobListing>> {
 
             override fun onFailure(call: Call<List<JobListing>>, t: Throwable) {
-                result.postValue(Resource.Error(message = t.localizedMessage ?: "unknown error"))
+                Log.d("Elijah", "Retrofit failure")
+
+                result.postValue(ApiResponse.Error(message = t.localizedMessage ?: "Error getting job listings, please try refreshing"))
             }
 
             override fun onResponse(
@@ -33,16 +110,26 @@ object Repository: GitJobsRepository {
                 response: Response<List<JobListing>>
             ) {
                 if (response.isSuccessful) {
-                    result.postValue(Resource.Success(data = response.body() ?: listOf()))
+                    if((response.body()?.size ?: 0) > 0) {
+                        result.postValue(ApiResponse.Success(response.body()!!))
+                    }else {
+                        val value : ApiResponse<List<JobListing>> =
+                            if(description == null) ApiResponse.Empty(
+                            "There were no listings found for \"$location\". Showing all saved listings", GitHubErrorMessage.BAD_LOCATION)
+                            else ApiResponse.Empty(
+                            "There were no listings found for \"$description\" in \"$location\". Showing all saved listings", GitHubErrorMessage.BAD_SEARCH)
+                        result.postValue(value)
+                    }
                 } else {
-                    result.postValue(Resource.Success(data =  listOf()))
+                    Log.d("Elijah", "Retrofit unsuccesful")
+
+                    result.postValue(ApiResponse.Error(message = response.message()))
                 }
             }
 
         })
 
         return result
-
     }
 
     override fun getCity(location: Location): MutableLiveData<Resource<String>> {
@@ -52,7 +139,7 @@ object Repository: GitJobsRepository {
         LocationClient.apiService.getMapQuestData(apiKey,locationQuery).enqueue(object:
             Callback<MapQuestResult> {
             override fun onFailure(call: Call<MapQuestResult>, t: Throwable) {
-                result.postValue(Resource.Error(message = t.localizedMessage ?: "unknown error"))
+                result.postValue(Resource.Error(message = t.localizedMessage  ?: "unknown error"))
             }
 
             override fun onResponse(
@@ -71,6 +158,20 @@ object Repository: GitJobsRepository {
         return result
     }
 
-    override fun getSavedJobs() {
+    override fun getSavedJobs(): LiveData<List<SavedJob>> {
+        return db.mainDao().getAllSavedJobs()
+    }
+
+    fun saveJob(jobListing: SavedJob) {
+        CoroutineScope(Dispatchers.IO).launch {
+            db.mainDao().insertSavedJob(jobListing)
+        }
+    }
+
+    fun unsaveJob(jobListing: SavedJob) {
+        CoroutineScope(Dispatchers.IO).launch {
+
+            db.mainDao().deleteSavedJob(jobListing.id)
+        }
     }
 }

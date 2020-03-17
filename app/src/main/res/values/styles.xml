@@ -16,6 +16,16 @@
         <item name="android:layout_height">50dp</item>
     </style>
 
+    <style name="AppButton" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/background_app_button</item>
+        <item name="android:stateListAnimator">@null</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:width">0dp</item>
+        <item name="android:layout_height">60dp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
     <style name="AppBottomSheetDialogTheme"
         parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/AppModalStyle</item>
@@ -24,6 +34,18 @@
     <style name="AppModalStyle"
         parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@drawable/background_bottom_sheet</item>
+    </style>
+
+
+    <style name="AppTheme.FullScreenDialog" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+
+    <style name="AppTheme.ModalAnimation">
+        <item name="android:windowEnterAnimation">@anim/modal_in</item>
+        <item name="android:windowExitAnimation">@anim/modal_out</item>
     </style>
 
 </resources>

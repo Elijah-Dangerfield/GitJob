@@ -5,20 +5,19 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F7F7F7">
+    android:background="@color/colorBackground">
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         android:animateLayoutChanges="true"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_clear_search_term">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_jobs"
@@ -27,8 +26,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-           />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -39,6 +37,17 @@
         android:background="@android:color/white"
         android:elevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/location_view"
+        android:layout_width="0dp"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@android:color/transparent"
+        android:elevation="5dp"
+        android:stateListAnimator="@null"
+        app:layout_constraintEnd_toEndOf="@+id/imageView2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -79,7 +88,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_location" />
 
     <ImageView
-        android:id="@+id/imageButton"
+        android:id="@+id/ib_search"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginEnd="12dp"
@@ -98,6 +107,28 @@
         android:elevation="5dp"
         android:src="@drawable/ic_filter"
         app:layout_constraintBottom_toBottomOf="@+id/toolbar_view"
-        app:layout_constraintEnd_toStartOf="@+id/imageButton"
+        app:layout_constraintEnd_toStartOf="@+id/ib_search"
         app:layout_constraintTop_toTopOf="@+id/toolbar_view" />
+
+    <TextView
+        android:id="@+id/tv_search_term"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/ib_clear_search_term"
+        app:layout_constraintStart_toEndOf="@+id/ib_clear_search_term"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view"
+        tools:text='"Python"' />
+
+    <ImageButton
+        android:id="@+id/ib_clear_search_term"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/ic_clear_text"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_view" />
 </androidx.constraintlayout.widget.ConstraintLayout>

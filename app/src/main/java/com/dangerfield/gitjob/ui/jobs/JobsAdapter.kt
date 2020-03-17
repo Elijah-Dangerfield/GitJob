@@ -1,0 +1,66 @@
+package com.dangerfield.gitjob.ui.jobs
+
+import android.content.Context
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.dangerfield.gitjob.R
+import com.dangerfield.gitjob.model.JobListing
+import com.like.LikeButton
+import com.like.OnLikeListener
+import kotlinx.android.synthetic.main.item_job_listing.view.*
+
+class JobsAdapter(private val context: Context, val saver: ListingSaver): RecyclerView.Adapter<JobsAdapter.ViewHolder>() {
+
+    var jobs = listOf<JobListing>()
+    set(value) {
+        field = value
+        notifyDataSetChanged()
+    }
+
+    inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val companyLogo: ImageView = view.iv_logo
+        val positionTitle: TextView = view.tv_job_title
+        val description: TextView = view.tv_job_description
+        val saveButton: LikeButton = view.btn_save
+
+        init {
+            saveButton.setOnLikeListener(object: OnLikeListener {
+                override fun liked(likeButton: LikeButton?) {
+                    saver.saveListing(jobs[adapterPosition])
+                    notifyDataSetChanged()
+                }
+                override fun unLiked(likeButton: LikeButton?) {
+                    saver.unsaveListing(jobs[adapterPosition])
+                    notifyDataSetChanged()
+                }
+            })
+        }
+    }
+
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_job_listing, parent, false))
+    }
+
+    override fun getItemCount() = jobs.size
+
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val job = jobs[position]
+
+        holder.apply {
+            positionTitle.text = job.title
+            description.text = job.description
+
+            Glide.with(companyLogo.context)
+                .load(job.company_logo)
+                .placeholder(R.color.colorPrimary)
+                .fitCenter()
+                .into(companyLogo)
+        }
+    }
+}

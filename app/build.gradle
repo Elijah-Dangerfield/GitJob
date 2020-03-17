@@ -32,6 +32,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    androidExtensions {
+        experimental = true
+    }
 }
 
 dependencies {
@@ -68,6 +72,12 @@ dependencies {
 
     // locations
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    //Dependency Injection
+    implementation 'org.koin:koin-android-viewmodel:2.0.1'
+
+    //Used for heart animation
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
 
 
 

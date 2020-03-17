@@ -1,5 +1,6 @@
 package com.dangerfield.gitjob.ui
 
+
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -9,26 +10,26 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.dangerfield.gitjob.R
-import com.dangerfield.gitjob.model.JobListing
-import kotlinx.android.synthetic.main.item_job_listing.view.*
+import com.dangerfield.gitjob.model.SavedJob
+import kotlinx.android.synthetic.main.item_saved_job_listing.view.*
 
-class JobsAdapter(private val context: Context): RecyclerView.Adapter<JobsAdapter.ViewHolder>() {
+class SavedJobsAdapter(private val context: Context): RecyclerView.Adapter<SavedJobsAdapter.ViewHolder>() {
 
-    var jobs = listOf<JobListing>()
-    set(value) {
-        field = value
-        notifyDataSetChanged()
-    }
+    var jobs = listOf<SavedJob>()
+        set(value) {
+            field = value
+            notifyDataSetChanged()
+        }
 
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val companyLogo: ImageView = view.iv_logo
         val positionTitle: TextView = view.tv_job_title
         val description: TextView = view.tv_job_description
+
     }
 
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_job_listing, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_saved_job_listing, parent, false))
     }
 
     override fun getItemCount() = jobs.size

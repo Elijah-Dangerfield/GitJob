@@ -1,11 +1,9 @@
 package com.dangerfield.gitjob.util
 
-import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.dangerfield.gitjob.R
-import com.dangerfield.gitjob.ui.JobsFragment
+import com.dangerfield.gitjob.ui.jobs.JobsFragment
 import com.dangerfield.gitjob.ui.SavedJobsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
