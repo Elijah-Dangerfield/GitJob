@@ -48,7 +48,6 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
         val apiResponse = createCall(params)
 
         setValue(Resource.Loading())
-
         result.addSource(apiResponse) { response ->
             //remove the source on the first response
             result.removeSource(apiResponse)
@@ -64,8 +63,21 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
                     (response.data!! as List<JobListing>).forEach { if(it.saved == true) count++ }
                     Log.d("Elijah", "saving call with $count items marked as saved")
 
+                    val dbSource = loadFromDb()
+
+                    result.addSource(dbSource) { newData ->
+
+                        var count = 0
+                        (newData as List<JobListing>).forEach { if(it.saved == true) count++ }
+                        Log.d("Elijah", "in mediator loadFromDB() with $count items marked as saved")
+
+                        setValue(Resource.Success(newData))
+                        result.removeSource(dbSource)
+                    }
 
                     saveCallResult(response.data!!)
+
+
                     /*
                     So the problem with the searching and with the saving/hearting happens here.
                     I am saving the call and then loading from the db expecting those changes to be there
@@ -77,11 +89,6 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
                     tomorrow: remove all the saving logic and just test with searching and such.
                      */
 
-                    val dbSource = loadFromDb()
-                    result.addSource(dbSource) { newData ->
-                        setValue(Resource.Success(newData))
-                        result.removeSource(dbSource)
-                    }
                 }
 
                 is ApiResponse.Empty -> {
