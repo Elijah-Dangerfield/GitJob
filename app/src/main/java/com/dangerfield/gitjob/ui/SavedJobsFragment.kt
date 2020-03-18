@@ -1,6 +1,8 @@
 package com.dangerfield.gitjob.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.lifecycle.Observer
@@ -17,8 +19,7 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs), OptionsPresent
     }()}
 
     private fun showOptions(savedJob: SavedJob) {
-        savedOptionsModal.show(parentFragmentManager, "options")
-        savedOptionsModal.currentSavedJob = savedJob
+        savedOptionsModal.show(parentFragmentManager, savedJob)
     }
 
     private val savedJobsAdapter by lazy { SavedJobsAdapter(context!!, this) }
@@ -36,6 +37,15 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs), OptionsPresent
     override fun presentOptions(savedJob: SavedJob) { showOptions(savedJob) }
 
     override fun onShare(savedJob: SavedJob) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_SUBJECT, "Check out this great job I found on Git Job")
+            putExtra(Intent.EXTRA_TEXT, savedJob.url!!)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 
     override fun onDelete(savedJob: SavedJob) { savedJobsViewModel.deleteSavedJob(savedJob) }
