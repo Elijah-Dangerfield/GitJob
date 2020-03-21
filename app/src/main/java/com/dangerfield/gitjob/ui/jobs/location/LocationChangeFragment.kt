@@ -21,32 +21,44 @@ import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.hideKeyboard
 import com.dangerfield.gitjob.util.onTextChanged
 import org.koin.android.viewmodel.ext.android.viewModel
+import org.w3c.dom.Text
 
 class LocationChangeFragment : DialogFragment() {
 
     lateinit var mFilterSetter: FilterSetter
+    var currentDeterminedLocation: String? = null
+    var currentSelectedLocation: String? = null
+
     val locationChangeViewModel: LocationChangeViewModel by viewModel()
 
     private val autoCompleteTerms: ArrayList<String> by lazy {
-        ArrayList<String>(resources.getStringArray(R.array.auto_complete_list).asList())
+        ArrayList<String>(resources.getStringArray(R.array.location_auto_complete_list).asList())
     }
 
-    private val searchedLocationsAdapter: AddedLocationsAdapter by lazy {
+    private val addedLocationsAdapter: AddedLocationsAdapter by lazy {
         AddedLocationsAdapter(
             context!!,
-            locationChangeViewModel
-        ) { term -> onSelectLocation(term) }
+            locationChangeViewModel,
+            currentSelectedLocation = if(currentSelectedLocation.isNullOrEmpty()) null else AddedLocation(currentSelectedLocation!!),
+            currentDeterminedLocation = if(currentDeterminedLocation.isNullOrEmpty()) null else AddedLocation((currentDeterminedLocation!!))
+        ) { term -> onSelectLocation(term)}
     }
 
     private val autoCompleteAdapter: AutoCompleteAdapter by lazy {
         AutoCompleteAdapter(
             context!!
-        ) { term -> onSelectLocation(term) }
+        ) { term ->
+            locationChangeViewModel.userState.value = UserState.INITAL
+            (input_location as TextView).text = ""
+            addedLocationsAdapter.searches.add(AddedLocation(term))
+            onSelectLocation(term)
+        }
     }
 
-    private fun onSelectLocation(location: String) =
-        Log.d("Elijah", "Location selected: $location")
-
+    private fun onSelectLocation(location: String) {
+        Log.d("Elijah", "Clicked a Location")
+        addedLocationsAdapter.selectedLocation = AddedLocation(location)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -90,7 +102,7 @@ class LocationChangeFragment : DialogFragment() {
 
     private fun observeSearchedLocations() {
         locationChangeViewModel.getSearchedLocations().observe(viewLifecycleOwner, Observer {
-            searchedLocationsAdapter.searches = it
+            addedLocationsAdapter.searches = it as ArrayList<AddedLocation>
             it.forEach {searched ->
                 if(!autoCompleteTerms.contains(searched.location.toLowerCase().trim())) { autoCompleteTerms.add(searched.location.toLowerCase().trim())
                 }
@@ -119,7 +131,8 @@ class LocationChangeFragment : DialogFragment() {
         input_location.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(view: TextView?, actionID: Int, event: KeyEvent?): Boolean {
                 if (actionID == EditorInfo.IME_ACTION_SEARCH) {
-                    //performSearch();
+                    hideKeyBoard()
+                    //TODO: show search results I guess
                     locationChangeViewModel.userState.value = UserState.SEARCHED
                     return true
                 }
@@ -133,33 +146,35 @@ class LocationChangeFragment : DialogFragment() {
                 UserState.TYPING
             else
                 UserState.INITAL
-            rv_location_change.adapter = if(it.isNotEmpty()) autoCompleteAdapter else searchedLocationsAdapter
+            rv_location_change.adapter = if(it.isNotEmpty()) autoCompleteAdapter else addedLocationsAdapter
             autoCompleteAdapter.terms = autoCompleteTerms.filter {term ->
                 term.toLowerCase().contains(input_location.text.toString().trim().toLowerCase())
             }
         }
         btn_done.setOnClickListener {
-            val location = input_location.text.toString().trim()
-            mFilterSetter.onSetCity(location)
+            var location = addedLocationsAdapter.selectedLocation?.location
+            if(location == currentSelectedLocation || location == null) this.dismiss()
+            if(location == addedLocationsAdapter.currentLocationString){
+                location = addedLocationsAdapter.currentDeterminedLocation?.location
+            }
+            mFilterSetter.onSetCity(location!!)
             locationChangeViewModel.saveSearchedLocation(AddedLocation(location))
             this.dismiss()
         }
         ib_clear_text.setOnClickListener { (input_location as TextView).text = "" }
-
-        //TODO: when the input is clicked show the x if letters exist
     }
 
-
-    fun enterInitialState() {
+    private fun enterInitialState() {
         ib_close.background = resources.getDrawable(R.drawable.ic_close, null)
         ib_close.setOnClickListener {
             this.dismiss()
         }
-        rv_location_change.adapter = searchedLocationsAdapter
+        hideKeyBoard()
+        rv_location_change.adapter = addedLocationsAdapter
 
     }
 
-    fun enterSearchedState() {
+    private fun enterSearchedState() {
         //prolly show search results adapter or something
     }
 
@@ -168,9 +183,7 @@ class LocationChangeFragment : DialogFragment() {
         input_location.clearFocus()
     }
 
-
-
-    fun enterTypingState() {
+    private fun enterTypingState() {
         ib_close.setOnClickListener {
             locationChangeViewModel.userState.value =
                 UserState.INITAL
@@ -183,11 +196,14 @@ class LocationChangeFragment : DialogFragment() {
     }
 
     companion object {
-        fun newInstance(filterSetter: FilterSetter): LocationChangeFragment {
+        fun newInstance(filterSetter: FilterSetter, currentDeterminedLocation: String?,
+                        currentSelectedLocation: String?): LocationChangeFragment {
+
             val fragment = LocationChangeFragment()
+            fragment.currentDeterminedLocation = currentDeterminedLocation
+            fragment.currentSelectedLocation = currentSelectedLocation
             fragment.mFilterSetter = filterSetter
             return fragment
         }
     }
-
 }

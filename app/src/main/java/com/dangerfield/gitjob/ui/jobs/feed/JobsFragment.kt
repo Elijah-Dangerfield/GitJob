@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.api.GitHubErrorMessage
 import com.dangerfield.gitjob.api.Resource
+import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.ui.jobs.filter.FiltersModal
 import com.dangerfield.gitjob.ui.jobs.location.LocationChangeFragment
@@ -43,9 +44,13 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         )
     }()}
 
-    private val newLocationChangeFragment = { {
+    private val newLocationChangeFragment
+            = { determined: String?, selected: String? ->
+        {
         LocationChangeFragment.newInstance(
-            this
+            filterSetter = this,
+            currentDeterminedLocation = determined,
+            currentSelectedLocation = selected
         )
     }()}
 
@@ -90,11 +95,11 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
     }
 
     override fun onSetCity(city: String) {
-        jobsViewModel.setLocation(city, refresh = true)
+        jobsViewModel.setSelectedLocation(city, refresh = true)
     }
 
     private fun observeLocation() {
-        jobsViewModel.getLocation().observe(viewLifecycleOwner, Observer {
+        jobsViewModel.getSelectedLocation().observe(viewLifecycleOwner, Observer {
             Log.d("Elijah", "Got new location string: $it")
 
             included_toolbar.tv_location.text =
@@ -109,7 +114,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         rv_jobs.adapter = jobsAdapter
         included_toolbar.btn_filter.setOnClickListener { filterSheet.show(parentFragmentManager, "filters") }
         included_toolbar.location_view.setOnClickListener {
-            newLocationChangeFragment().show(parentFragmentManager, "location_change")
+            newLocationChangeFragment(jobsViewModel.determinedLocation.value, jobsViewModel.getSelectedLocation().value).show(parentFragmentManager, "location_change")
         }
 
         included_toolbar.ib_search.setOnClickListener { navigateToSearch() }
@@ -134,7 +139,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
                 is Resource.Success ->  jobsAdapter.jobs = it.data!!
                 is Resource.Error -> {
                     if(it.errorType == GitHubErrorMessage.BAD_LOCATION) {
-                        jobsViewModel.setLocation(null)
+                        jobsViewModel.setSelectedLocation(null)
                     }else if (it.errorType == GitHubErrorMessage.BAD_SEARCH) {
                         jobsViewModel.setSearchTerm(null)
                     }
@@ -163,11 +168,15 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
                         when(response){
                             is Resource.Success -> {
                                 Log.d("Elijah", "got user city: " +  response.data)
-                                jobsViewModel.setLocation(response.data!!, refresh = true)
+                                jobsViewModel.setSelectedLocation(response.data!!, refresh = true)
+                                jobsViewModel.saveLocation(AddedLocation(response.data))
+                                //TODO change this to only update if the users prefrences are user location
+                                // otherwise logic elsewhere should just use the last USED location, which could be set in the done button click
+                                jobsViewModel.determinedLocation.value = response.data
                             }
                             is Resource.Error ->  {
                                 Toast.makeText(context, response.message, Toast.LENGTH_LONG).show()
-                                jobsViewModel.setLocation(null)
+                                jobsViewModel.setSelectedLocation(null)
                                 included_toolbar.tv_location.text = resources.getString(R.string.app_name)
                                 Log.d("Elijah", "error getting user city: " + response.message)
                             }

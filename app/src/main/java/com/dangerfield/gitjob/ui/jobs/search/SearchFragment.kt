@@ -25,7 +25,7 @@ import org.koin.android.viewmodel.ext.android.viewModel
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     lateinit var mFilterSetter: FilterSetter
-    private val terms: ArrayList<String> by lazy { ArrayList<String>(resources.getStringArray(R.array.auto_complete_list).asList())}
+    private val terms: ArrayList<String> by lazy { ArrayList<String>(resources.getStringArray(R.array.search_auto_complete_list).asList())}
     private val searchAdapter: SearchJobsAdapter by lazy {
         SearchJobsAdapter(
             context!!,

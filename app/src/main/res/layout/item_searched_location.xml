@@ -3,7 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="1dp"
+    android:background="@android:color/white">
 
     <TextView
         android:id="@+id/tv_searched_location"
@@ -13,10 +15,12 @@
         android:layout_marginEnd="16dp"
         android:maxLines="1"
         android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_search"
-        app:layout_constraintEnd_toStartOf="@+id/ib_remove"
-        app:layout_constraintStart_toEndOf="@+id/iv_search"
-        app:layout_constraintTop_toTopOf="@+id/iv_search" />
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_clock"
+        app:layout_constraintEnd_toStartOf="@+id/ib_green_check"
+        app:layout_constraintStart_toEndOf="@+id/iv_clock"
+        app:layout_constraintTop_toTopOf="@+id/iv_clock" />
 
     <ImageView
         android:id="@+id/iv_clock"
@@ -44,23 +48,35 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton
-        android:id="@+id/ib_remove"
+        android:id="@+id/ib_green_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:background="@drawable/ic_close"
-        app:layout_constraintBottom_toBottomOf="@+id/iv_search"
+        android:background="@drawable/ic_check"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_clock"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/iv_search" />
+        app:layout_constraintTop_toTopOf="@+id/iv_clock" />
 
     <View
         android:id="@+id/btn_location"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/tv_search_term"
-        app:layout_constraintStart_toStartOf="@+id/iv_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_location_subtext"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="TextView"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/tv_searched_location"
+        app:layout_constraintStart_toStartOf="@+id/tv_searched_location"
+        app:layout_constraintTop_toBottomOf="@+id/tv_searched_location" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

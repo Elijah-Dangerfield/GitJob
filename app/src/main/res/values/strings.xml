@@ -1,12 +1,10 @@
 <resources>
     <string name="app_name">Git Job</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="saved">Saved</string>
     <string name="jobs">Jobs</string>
 
-    <string-array name="auto_complete_list">
+    <string-array name="search_auto_complete_list">
         <item>python</item>
         <item>android</item>
         <item>ios</item>
@@ -50,5 +48,69 @@
         <item>web developer</item>
         <item>.NET</item>
         <item>IT</item>
+    </string-array>
+
+    <string-array name="location_auto_complete_list">
+        <item>New York</item>
+        <item>Los Angeles</item>
+        <item>Chicago</item>
+        <item>Huston</item>
+        <item>Phoenix</item>
+        <item>Philadelphia</item>
+        <item>San Antonio</item>
+        <item>San Diego</item>
+        <item>San Jose</item>
+        <item>Detroit</item>
+        <item>Jacksonville</item>
+        <item>Indianapolis</item>
+        <item>San Francisco</item>
+        <item>Columbus</item>
+        <item>Austin</item>
+        <item>Memphis</item>
+        <item>Forth Worth</item>
+        <item>Baltimore</item>
+        <item>Charlotte</item>
+        <item>El Paso</item>
+        <item>Boston</item>
+        <item>Seattle</item>
+        <item>Washington</item>
+        <item>Milwaukee</item>
+        <item>Denver</item>
+        <item>Louisville</item>
+        <item>Las Vegas</item>
+        <item>Nashville</item>
+        <item>Portland</item>
+        <item>Tucson</item>
+        <item>Albuquerque</item>
+        <item>Long Beach</item>
+        <item>Fresno</item>
+        <item>Sacramento</item>
+        <item>Mesa</item>
+        <item>Kansas City</item>
+        <item>Cleveland</item>
+        <item>Virginia Beach</item>
+        <item>Omaha</item>
+        <item>Miami</item>
+        <item>Oakland</item>
+        <item>Tulsa</item>
+        <item>Honolulu</item>
+        <item>Minneapolis</item>
+        <item>Colorado Springs</item>
+        <item>Arlington</item>
+        <item>Wichita</item>
+        <item>St. Louis</item>
+        <item>Anaheim</item>
+        <item>Tampa</item>
+        <item>Cincinnati</item>
+        <item>Pittsburgh</item>
+        <item>Bakersfield</item>
+        <item>Toledo</item>
+        <item>Newark</item>
+        <item>Anchorage</item>
+        <item>Buffalo</item>
+        <item>St. Paul</item>
+        <item>Fort Wayne</item>
+        <item>New Orleans</item>
+        <item>Fremont</item>
     </string-array>
 </resources>

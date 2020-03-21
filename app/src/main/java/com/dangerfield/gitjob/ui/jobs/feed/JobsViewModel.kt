@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.api.Resource
+import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.JobListing
 
 class JobsViewModel(private val repository: Repository) : ViewModel(),
@@ -12,16 +13,18 @@ class JobsViewModel(private val repository: Repository) : ViewModel(),
 
 
     private var jobs = MutableLiveData<Resource<List<JobListing>>>()
-    private var location = MutableLiveData<String?>()
+    private var selectedLocation = MutableLiveData<String?>()
     private var searchTerm = MutableLiveData<String?>()
+    var determinedLocation = MutableLiveData<String?>()
 
-    fun setLocation(city: String?, refresh: Boolean? = null) {
-        location.value = city
+
+    fun setSelectedLocation(city: String?, refresh: Boolean? = null) {
+        selectedLocation.value = city
 
         if (refresh == true && city != null) refreshListings()
     }
 
-    fun getLocation() = location
+    fun getSelectedLocation() = selectedLocation
 
     fun setSearchTerm(term: String?) {
         searchTerm.value = term
@@ -42,12 +45,14 @@ class JobsViewModel(private val repository: Repository) : ViewModel(),
 
 
     fun refreshListings(){
-        forceFetch(location = location.value, description = searchTerm.value)
+        forceFetch(location = selectedLocation.value, description = searchTerm.value)
     }
 
     private fun forceFetch(location : String? = null, description: String? = null) {
         repository.forceFetchJobs(location, description)
     }
+
+    fun saveLocation(location: AddedLocation) { repository.saveSearchedLocation(location) }
 
     override fun saveListing(listing: JobListing) {
         repository.saveJob(listing.toSaveable())
