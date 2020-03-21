@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
+import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.SearchedTerm
 
 @Dao
@@ -85,5 +86,26 @@ interface JobListingsDao {
      */
     @Query("DELETE from SEARCHED_TERMS WHERE term = :term")
     fun deleteSearchedTerm(term: String)
+
+    /*---------------------ADDED LOCATIONS----------------------*/
+
+    /**
+     * retrieves all locations
+     */
+    @Query("SELECT * from ADDED_LOCATIONS")
+    fun getAllSearchedLocations(): LiveData<List<AddedLocation>>
+
+    /**
+     * inserts a searched location into the database
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertSearchedLocation(location: AddedLocation)
+
+    /**
+     * deletes a searched location
+     */
+    @Query("DELETE from ADDED_LOCATIONS WHERE location = :location")
+    fun deleteSearchedLocation(location: String)
+
 
 }

@@ -18,7 +18,7 @@ val viewModelModule = module {
     // create the viewModel with the repository dependency INJECTED :)
     viewModel { JobsViewModel(get()) }
 
-    viewModel { LocationChangeViewModel() }
+    viewModel { LocationChangeViewModel(get()) }
 
     viewModel { SavedJobsViewModel(get()) }
 

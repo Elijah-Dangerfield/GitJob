@@ -10,7 +10,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.SearchedTerm
-import kotlinx.android.synthetic.main.item_search.view.*
+import kotlinx.android.synthetic.main.item_search_history.view.*
 
 class SearchJobsAdapter(private val context: Context, val persister: SearchTermPersister, val onSelectTerm: ((term: String) -> Unit)): RecyclerView.Adapter<SearchJobsAdapter.ViewHolder>() {
 
@@ -40,7 +40,7 @@ class SearchJobsAdapter(private val context: Context, val persister: SearchTermP
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search, parent, false))
+        return ViewHolder(LayoutInflater.from(context).inflate(R.layout.item_search_history, parent, false))
     }
 
     override fun getItemCount() = searches.size

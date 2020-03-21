@@ -39,6 +39,10 @@ private fun hideKeyboardFrom(view: View) {
     imm.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
+fun View.hideKeyboard() {
+    val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
+    imm.hideSoftInputFromWindow(this.windowToken, 0)
+}
 
 fun View.goneIf(condition: Boolean) {
     this.visibility = if(condition) View.GONE else View.VISIBLE
@@ -62,6 +66,8 @@ fun EditText.openKeyboard() {
     val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
+
+
 
 fun String.removeHtml(): String {
     return Jsoup.parse(this).text()

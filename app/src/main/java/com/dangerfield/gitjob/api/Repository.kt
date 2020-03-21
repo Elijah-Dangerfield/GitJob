@@ -8,20 +8,17 @@ import androidx.lifecycle.MutableLiveData
 import com.dangerfield.gitjob.db.GitJobDatabase
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
+import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.SearchedTerm
-import com.dangerfield.gitjob.model.mapquest.LatLng
 import com.dangerfield.gitjob.model.mapquest.MapQuestResult
 import com.dangerfield.gitjob.util.pmap
 import com.dangerfield.gitjob.util.removeHtml
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.coroutines.coroutineContext
 
 class Repository(application: Application): GitJobsRepository {
 
@@ -203,6 +200,21 @@ class Repository(application: Application): GitJobsRepository {
     fun saveSearchTerm(term: SearchedTerm) {
         CoroutineScope(IO).launch {
             db.mainDao().insertSearchedTerm(term)
+        }
+    }
+
+
+    fun getSearchedLocations() = db.mainDao().getAllSearchedLocations()
+
+    fun removeSearchedLocation(location: AddedLocation) {
+        CoroutineScope(IO).launch {
+            db.mainDao().deleteSearchedLocation(location.location.trim())
+        }
+    }
+
+    fun saveSearchedLocation(location: AddedLocation) {
+        CoroutineScope(IO).launch {
+            db.mainDao().insertSearchedLocation(location)
         }
     }
 }
