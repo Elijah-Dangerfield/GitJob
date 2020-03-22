@@ -8,14 +8,20 @@ import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.JobListing
 
+enum class Filter(val jobtype: String){
+    FULL_TIME("Full Time"),
+    PART_TIME("Part Time")
+}
+
 class JobsViewModel(private val repository: Repository) : ViewModel(),
     ListingSaver {
 
 
     private var jobs = MutableLiveData<Resource<List<JobListing>>>()
     private var selectedLocation = MutableLiveData<String?>()
-    private var searchTerm = MutableLiveData<String?>()
+    private var searchTerm = MutableLiveData<String?>(null)
     var determinedLocation = MutableLiveData<String?>()
+    var filter = MutableLiveData<Filter?>(null)
 
 
     fun setSelectedLocation(city: String?, refresh: Boolean? = null) {

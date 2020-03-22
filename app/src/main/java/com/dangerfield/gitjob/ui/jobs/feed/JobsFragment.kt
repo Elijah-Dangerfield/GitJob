@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -22,7 +23,7 @@ import com.dangerfield.gitjob.util.hasLocationPermission
 import com.dangerfield.gitjob.util.requestLocationPermission
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_jobs.*
-import kotlinx.android.synthetic.main.tool_bar_searched_term.view.*
+import kotlinx.android.synthetic.main.item_jobs_filter.view.*
 import kotlinx.android.synthetic.main.toolbar_jobs.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -40,9 +41,10 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
 
     private val filterSheet by lazy { {
         FiltersModal.newInstance(
-            this
+            this,
+            jobsViewModel.filter.value
         )
-    }()}
+    }}
 
     private val newLocationChangeFragment
             = { determined: String?, selected: String? ->
@@ -71,6 +73,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         observeListings()
         observeLocation()
         observeSearchTerm()
+        observeFilter()
     }
 
     override fun onRequestPermissionsResult(
@@ -94,6 +97,8 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         jobsViewModel.setSearchTerm(term)
     }
 
+
+
     override fun onSetCity(city: String) {
         jobsViewModel.setSelectedLocation(city, refresh = true)
     }
@@ -107,12 +112,16 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         })
     }
 
-    override fun onSetFilter(filter: String?) { filterSheet.dismiss() }
+
+
+    override fun onSetFilter(filter: Filter?) {
+        jobsViewModel.filter.value = filter
+    }
 
     private fun setupViews() {
         rv_jobs.layoutManager = LinearLayoutManager(context)
         rv_jobs.adapter = jobsAdapter
-        included_toolbar.btn_filter.setOnClickListener { filterSheet.show(parentFragmentManager, "filters") }
+        included_toolbar.btn_filter.setOnClickListener { filterSheet().show(parentFragmentManager, "filter") }
         included_toolbar.location_view.setOnClickListener {
             newLocationChangeFragment(jobsViewModel.determinedLocation.value, jobsViewModel.getSelectedLocation().value).show(parentFragmentManager, "location_change")
         }
@@ -126,8 +135,12 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
 
         swipe_refresh_layout.setOnRefreshListener { jobsViewModel.refreshListings()}
 
-        included_toolbar_searched_term.ib_clear_search_term.setOnClickListener {
+        included_search_term_view.ib_clear_filter.setOnClickListener {
             jobsViewModel.setSearchTerm(null)
+        }
+
+        included_filter_view.ib_clear_filter.setOnClickListener {
+            jobsViewModel.filter.value = null
         }
     }
     private fun observeListings() {
@@ -151,8 +164,22 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
 
     private fun observeSearchTerm() {
         jobsViewModel.getSearchTerm().observe(viewLifecycleOwner, Observer {
-            included_toolbar_searched_term.goneIf(it.isNullOrEmpty())
-            if(!it.isNullOrEmpty()) included_toolbar_searched_term.tv_search_term.text = "\"$it\""
+            included_search_term_view.goneIf(it.isNullOrEmpty())
+            toolbar_search_term.goneIf(included_search_term_view.visibility == View.GONE
+                    && included_filter_view.visibility == View.GONE)
+
+            if(!it.isNullOrEmpty()) included_search_term_view.tv_filter.text = "\"$it\""
+        })
+    }
+
+    private fun observeFilter() {
+        jobsViewModel.filter.observe(viewLifecycleOwner, Observer {
+            Log.d("Elijah", "New filter: $it")
+            included_filter_view.goneIf(it == null)
+            toolbar_search_term.goneIf(included_search_term_view.visibility == View.GONE
+                    && included_filter_view.visibility == View.GONE)
+
+            if(it != null) included_filter_view.tv_filter.text = it.jobtype
         })
     }
 
