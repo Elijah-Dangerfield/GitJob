@@ -1,7 +1,7 @@
 package com.dangerfield.gitjob.di
 
 import com.dangerfield.gitjob.api.Repository
-import com.dangerfield.gitjob.ui.SavedJobsViewModel
+import com.dangerfield.gitjob.ui.saved.SavedJobsViewModel
 import com.dangerfield.gitjob.ui.jobs.feed.JobsViewModel
 import com.dangerfield.gitjob.ui.jobs.location.LocationChangeViewModel
 import com.dangerfield.gitjob.ui.jobs.search.SearchViewModel

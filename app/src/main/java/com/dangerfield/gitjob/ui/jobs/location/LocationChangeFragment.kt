@@ -29,7 +29,7 @@ class LocationChangeFragment : DialogFragment() {
     var currentDeterminedLocation: String? = null
     var currentSelectedLocation: String? = null
 
-    val locationChangeViewModel: LocationChangeViewModel by viewModel()
+    private val locationChangeViewModel: LocationChangeViewModel by viewModel()
 
     private val autoCompleteTerms: ArrayList<String> by lazy {
         ArrayList<String>(resources.getStringArray(R.array.location_auto_complete_list).asList())
@@ -46,17 +46,31 @@ class LocationChangeFragment : DialogFragment() {
 
     private val autoCompleteAdapter: AutoCompleteAdapter by lazy {
         AutoCompleteAdapter(
-            context!!
+            context!!,
+            emptyResultsList
         ) { term ->
-            locationChangeViewModel.userState.value = UserState.INITAL
-            (input_location as TextView).text = ""
-            addedLocationsAdapter.searches.add(AddedLocation(term))
-            onSelectLocation(term)
+            val location =
+            if(term.contains("Search")){
+                term.substringAfter("\"").substringBeforeLast("\"").toString()
+            }else {
+                term
+            }
+           searchFor(location)
         }
+    }
+
+    private fun searchFor(term: String) {
+        addedLocationsAdapter.searches.add(AddedLocation(term))
+        onSelectLocation(term)
+    }
+
+    private val emptyResultsList: (() -> List<String>) =  {
+         listOf("Search for \"${locationChangeViewModel.searchTerm.value}\"")
     }
 
     private fun onSelectLocation(location: String) {
         Log.d("Elijah", "Clicked a Location")
+        locationChangeViewModel.userState.value = UserState.LOCATION_CHOSEN
         addedLocationsAdapter.selectedLocation = AddedLocation(location)
     }
 
@@ -114,10 +128,13 @@ class LocationChangeFragment : DialogFragment() {
     private fun observeUserState() {
         locationChangeViewModel.userState.observe(viewLifecycleOwner, Observer {
             ib_clear_text.goneIf(it != UserState.TYPING)
+            btn_done.goneIf(it != UserState.LOCATION_CHOSEN)
+            Log.d("Elijah", "User state: ${it}")
             when(it) {
                 UserState.TYPING -> enterTypingState()
                 UserState.SEARCHED -> enterSearchedState()
                 UserState.INITAL -> enterInitialState()
+                UserState.LOCATION_CHOSEN -> enterLocationChosenState()
             }
         })
     }
@@ -131,9 +148,7 @@ class LocationChangeFragment : DialogFragment() {
         input_location.setOnEditorActionListener(object : TextView.OnEditorActionListener {
             override fun onEditorAction(view: TextView?, actionID: Int, event: KeyEvent?): Boolean {
                 if (actionID == EditorInfo.IME_ACTION_SEARCH) {
-                    hideKeyBoard()
-                    //TODO: show search results I guess
-                    locationChangeViewModel.userState.value = UserState.SEARCHED
+                    searchFor(input_location.text.toString().trim())
                     return true
                 }
                 return false
@@ -142,10 +157,13 @@ class LocationChangeFragment : DialogFragment() {
         })
 
         input_location.onTextChanged {
-            locationChangeViewModel.userState.value = if(it.isNotEmpty())
-                UserState.TYPING
-            else
-                UserState.INITAL
+            locationChangeViewModel.searchTerm.value = it
+            if(it.isNotEmpty()) {
+                locationChangeViewModel.userState.value = UserState.TYPING
+            }else if (locationChangeViewModel.userState.value != UserState.LOCATION_CHOSEN){
+                locationChangeViewModel.userState.value = UserState.INITAL
+            }
+
             rv_location_change.adapter = if(it.isNotEmpty()) autoCompleteAdapter else addedLocationsAdapter
             autoCompleteAdapter.terms = autoCompleteTerms.filter {term ->
                 term.toLowerCase().contains(input_location.text.toString().trim().toLowerCase())
@@ -176,6 +194,12 @@ class LocationChangeFragment : DialogFragment() {
 
     private fun enterSearchedState() {
         //prolly show search results adapter or something
+    }
+
+    private fun enterLocationChosenState() {
+        (input_location as TextView).text = ""
+        hideKeyBoard()
+        rv_location_change.adapter = addedLocationsAdapter
     }
 
     fun hideKeyBoard() {

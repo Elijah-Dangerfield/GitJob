@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/savedJobsFragment"
-        android:name="com.dangerfield.gitjob.ui.SavedJobsFragment"
+        android:name="com.dangerfield.gitjob.ui.saved.SavedJobsFragment"
         android:label="fragment_saved_jobs"
         tools:layout="@layout/fragment_saved_jobs" />
 </navigation>

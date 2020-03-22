@@ -1,8 +1,7 @@
-package com.dangerfield.gitjob.ui
+package com.dangerfield.gitjob.ui.saved
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.View
 import androidx.lifecycle.Observer
@@ -12,7 +11,8 @@ import com.dangerfield.gitjob.model.SavedJob
 import kotlinx.android.synthetic.main.fragment_saved_jobs.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs), OptionsPresenter {
+class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
+    OptionsPresenter {
 
     private val savedOptionsModal by lazy { {
         SavedOptionsModal.newInstance(this)
@@ -22,7 +22,12 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs), OptionsPresent
         savedOptionsModal.show(parentFragmentManager, savedJob)
     }
 
-    private val savedJobsAdapter by lazy { SavedJobsAdapter(context!!, this) }
+    private val savedJobsAdapter by lazy {
+        SavedJobsAdapter(
+            context!!,
+            this
+        )
+    }
 
     private val savedJobsViewModel : SavedJobsViewModel by viewModel()
 

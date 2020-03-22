@@ -6,7 +6,7 @@ import com.dangerfield.gitjob.api.Repository
 import com.dangerfield.gitjob.model.AddedLocation
 
 enum class UserState {
-    TYPING, SEARCHED, INITAL
+    TYPING, SEARCHED, INITAL, LOCATION_CHOSEN
 }
 
 interface SearchedLocationPersister{
@@ -27,4 +27,5 @@ class LocationChangeViewModel(private val repository: Repository): ViewModel(), 
 
 
     var userState = MutableLiveData<UserState>(UserState.INITAL)
+    var searchTerm = MutableLiveData<String>()
 }

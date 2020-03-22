@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui
+package com.dangerfield.gitjob.ui.saved
 
 import android.os.Bundle
 import android.view.LayoutInflater

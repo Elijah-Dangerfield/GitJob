@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui
+package com.dangerfield.gitjob.ui.saved
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

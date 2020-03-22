@@ -9,11 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.dangerfield.gitjob.R
 import kotlinx.android.synthetic.main.item_autocomplete.view.*
 
-class AutoCompleteAdapter(private val context: Context, val onSelectTerm: ((term: String) -> Unit)): RecyclerView.Adapter<AutoCompleteAdapter.ViewHolder>() {
+class AutoCompleteAdapter(private val context: Context,
+                          val listOnEmpty:  (() -> List<String>)? = null,
+                          val onSelectTerm: ((term: String) -> Unit)
+): RecyclerView.Adapter<AutoCompleteAdapter.ViewHolder>() {
 
     var terms = listOf<String>()
         set(value) {
-            field = value
+            field = if(value.isEmpty() && listOnEmpty != null) listOnEmpty.invoke() else value
             notifyDataSetChanged()
         }
 

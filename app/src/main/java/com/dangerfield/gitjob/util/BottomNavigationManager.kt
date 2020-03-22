@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.ui.jobs.feed.JobsFragment
-import com.dangerfield.gitjob.ui.SavedJobsFragment
+import com.dangerfield.gitjob.ui.saved.SavedJobsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class BottomNavigationManager(val activity: AppCompatActivity, val container: Int) {
