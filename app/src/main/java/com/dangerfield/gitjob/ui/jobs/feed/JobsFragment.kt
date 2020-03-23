@@ -14,6 +14,7 @@ import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.api.GitHubErrorMessage
 import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.model.AddedLocation
+import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.ui.jobs.filter.FiltersModal
 import com.dangerfield.gitjob.ui.jobs.location.LocationChangeFragment
@@ -30,7 +31,9 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
     private val jobsViewModel : JobsViewModel by viewModel()
 
 
-    private val jobsAdapter: JobsAdapter by lazy { JobsAdapter(context!!, jobsViewModel) }
+    private val jobsAdapter: JobsAdapter by lazy { JobsAdapter(context!!, jobsViewModel) {
+        navigateToJobDetail(it)
+    } }
 
     private val filterSheet by lazy { {
         FiltersModal.newInstance(this, jobsViewModel.filter.value)
@@ -214,6 +217,13 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
             Log.d("Elijah", "requesting user permissions: ")
             requestLocationPermission(LOCATION_PERMISSION)
         }
+    }
+
+    private fun navigateToJobDetail(job: JobListing) {
+        parentFragmentManager
+            .beginTransaction().add(R.id.content, JobDetailFragment.newInstance(job))
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun navigateToSearch() {

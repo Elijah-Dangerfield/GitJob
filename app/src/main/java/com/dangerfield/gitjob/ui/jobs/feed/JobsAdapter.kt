@@ -9,13 +9,14 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.JobListing
 import com.like.LikeButton
 import com.like.OnLikeListener
 import kotlinx.android.synthetic.main.item_job_listing.view.*
 
-class JobsAdapter(private val context: Context, val persistance: ListingSaver): RecyclerView.Adapter<JobsAdapter.ViewHolder>() {
+class JobsAdapter(private val context: Context, val persistance: ListingSaver, val onItemClicked: ((JobListing) -> Unit)): RecyclerView.Adapter<JobsAdapter.ViewHolder>() {
 
     var jobs = listOf<JobListing>()
     set(value) {
@@ -30,6 +31,10 @@ class JobsAdapter(private val context: Context, val persistance: ListingSaver): 
         val saveButton: LikeButton = view.btn_save
 
         init {
+
+            this.itemView.setOnClickListener {
+                onItemClicked(jobs[adapterPosition])
+            }
             saveButton.setOnLikeListener(object: OnLikeListener {
                 override fun liked(likeButton: LikeButton?) {
                     persistance.saveListing(jobs[adapterPosition])
@@ -65,6 +70,7 @@ class JobsAdapter(private val context: Context, val persistance: ListingSaver): 
                 .load(job.company_logo)
                 .placeholder(R.color.colorPrimary)
                 .fitCenter()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(companyLogo)
         }
     }

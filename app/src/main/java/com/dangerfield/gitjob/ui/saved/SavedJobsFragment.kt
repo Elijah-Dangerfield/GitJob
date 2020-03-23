@@ -8,6 +8,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.SavedJob
+import com.dangerfield.gitjob.util.console
 import kotlinx.android.synthetic.main.fragment_saved_jobs.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
@@ -19,6 +20,7 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
     }()}
 
     private fun showOptions(savedJob: SavedJob) {
+        console.log("Showing options for job $savedJob")
         savedOptionsModal.show(parentFragmentManager, savedJob)
     }
 

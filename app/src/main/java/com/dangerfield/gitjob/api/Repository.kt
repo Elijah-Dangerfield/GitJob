@@ -113,8 +113,14 @@ class Repository(application: Application): GitJobsRepository {
                         CoroutineScope(IO).launch {
                             val value = processListingResponse(response.body()!!)
                             var count = 0
-                            value.forEach { if(it.saved == true) count++ }
+                            var urlCount = 0
+                            value.forEach {
+                                if(it.saved == true) count++
+                                if(!it.url.isNullOrEmpty())  urlCount++
+                            }
                             Log.d("Elijah", "Posting api call success with $count items marked as saved")
+                            Log.d("Elijah", "Posting api call success with $urlCount urls marked as not null")
+
                             result.postValue(ApiResponse.Success(value))
                         }
                     }else {
@@ -140,6 +146,11 @@ class Repository(application: Application): GitJobsRepository {
          return response.pmap {
              it.saved = queryForSavedJob(it).isNotEmpty()
              it.description = it.description?.removeHtml()
+             it.title = it.title?.removeHtml()
+             if(it.how_to_apply?.contains("http") == true) {
+                 it.url = "http" + it.how_to_apply?.substringAfter("\"http")?.substringBefore("\">")
+             }
+             it.how_to_apply = it.how_to_apply?.removeHtml()
              it
          }
     }

@@ -27,6 +27,6 @@ data class JobListing(
     )
 
     fun toSaveable(): SavedJob {
-        return SavedJob(this.company,this.company_logo, this.company_url, this.created_at, this.description,this.how_to_apply, this.id, this.location, this.title, this.type)
+        return SavedJob(this.company,this.company_logo, this.company_url, this.created_at, this.description,this.how_to_apply, this.id, this.location, this.title, this.type, this.url)
     }
 }
