@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
@@ -69,7 +70,6 @@ fun EditText.openKeyboard() {
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
 
-
 fun String.removeHtml(): String {
     return Jsoup.parse(this).text()
 }
@@ -77,3 +77,11 @@ fun String.removeHtml(): String {
 suspend fun <A, B> Iterable<A>.pmap(f: suspend (A) -> B): List<B> = coroutineScope {
     map { async { f(it) } }.awaitAll()
 }
+
+class Console {
+    fun log(log: String) {
+        Log.d("Elijah", log)
+    }
+}
+
+val console = Console()

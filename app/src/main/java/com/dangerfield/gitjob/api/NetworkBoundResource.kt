@@ -4,6 +4,7 @@ import androidx.annotation.MainThread
 import androidx.annotation.WorkerThread
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.dangerfield.gitjob.util.console
 
 /**
  * A generic class that can provide a resource backed by both the sqlite database and the network.
@@ -39,6 +40,8 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
 
     fun refresh(params: CallParameters): NetworkBoundResource<ResultType, CallParameters> {
         val apiResponse = createCall(params)
+        console.log("calling refresh in network bound resource")
+
 
         setValue(Resource.Loading())
         result.addSource(apiResponse) { response ->
@@ -48,12 +51,16 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
             when(response) {
 
                 is ApiResponse.Success -> {
+                    console.log("successful refresh in network bound resource, saving results")
+
                     saveCallResult(response.data!!)
                 }
 
                 is ApiResponse.Empty -> {
                     setValue(Resource.Error(message = response.message!!))
                     val dbSource = loadFromDb()
+
+                    console.log("got empty response in refresh, sending back error message and loading from db")
 
                     result.addSource(dbSource) { newData ->
                         setValue(Resource.Error(data = newData, message = response.message, errorType = response.errorType))
@@ -63,6 +70,8 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
 
                 is ApiResponse.Error -> {
                     val dbSource = loadFromDb()
+                    console.log("got error in refresh loading from db with error message")
+
                     result.addSource(dbSource) { newData ->
                         setValue(Resource.Error(newData , response.message ?: "unknown error"))
                         result.removeSource(dbSource)
@@ -88,6 +97,8 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
 
         result.addSource(dbSource) { newData -> setValue(Resource.Loading(newData)) }
 
+        console.log("showing db while fetching from network in network bound resource")
+
 
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
@@ -96,6 +107,8 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
             when(response) {
 
                 is ApiResponse.Success -> {
+                    console.log("got success from fetch in network bound resource, saving call and loading from db")
+
                     saveCallResult(response.data!!)
                     val newDbResults = loadFromDb()
                     result.addSource(newDbResults) { newData ->
@@ -106,6 +119,8 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
                 is ApiResponse.Empty -> {
                     setValue(Resource.Error(message = response.message!!))
                     val newDbResults = loadFromDb()
+                    console.log("got empty from fetch in network bound resource, loading from db as error with message")
+
                     result.addSource(newDbResults) { newData ->
                         setValue(Resource.Error(data = newData, message = response.message, errorType = response.errorType))
                     }
@@ -113,6 +128,8 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
 
                 is ApiResponse.Error -> {
                     val newDbResults = loadFromDb()
+                    console.log("got error from fetch in network bound resource, loading from db as error with message")
+
                     result.addSource(newDbResults) { newData ->
                         setValue(Resource.Error(newData , response.message ?: "unknown error"))
                     }

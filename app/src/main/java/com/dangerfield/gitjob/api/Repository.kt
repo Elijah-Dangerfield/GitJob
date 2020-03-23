@@ -11,6 +11,7 @@ import com.dangerfield.gitjob.model.SavedJob
 import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.SearchedTerm
 import com.dangerfield.gitjob.model.mapquest.MapQuestResult
+import com.dangerfield.gitjob.util.console
 import com.dangerfield.gitjob.util.pmap
 import com.dangerfield.gitjob.util.removeHtml
 import kotlinx.coroutines.CoroutineScope
@@ -45,7 +46,6 @@ class Repository(application: Application): GitJobsRepository {
          }
 
          override fun createCall(params: GithubApiParams): LiveData<ApiResponse<List<JobListing>>> {
-             Log.d("Elijah", "Actually calling api with location: " + params.location + " and desc: " + params.description)
              return getListingsFromApi(params.location, params.description)
          }
      }
@@ -85,10 +85,13 @@ class Repository(application: Application): GitJobsRepository {
     fun getListingsFromApi(location: String? = null,
                            description: String? = null): LiveData<ApiResponse<List<JobListing>>> {
 
+
+        console.log("actually calling api in repository with $location and $description")
+
         val result = MutableLiveData<ApiResponse<List<JobListing>>>()
 
         if(!Connectivity.isOnline) {
-            result.postValue(ApiResponse.Error(null, ""))
+            result.postValue(ApiResponse.Error(null, "Please check your internet connection and try again"))
             return result
         }
 
@@ -96,7 +99,7 @@ class Repository(application: Application): GitJobsRepository {
             .enqueue(object: Callback<List<JobListing>> {
 
             override fun onFailure(call: Call<List<JobListing>>, t: Throwable) {
-                Log.d("Elijah", "Retrofit failure")
+                console.log("got failure in api call of repository")
 
                 result.postValue(ApiResponse.Error(message = t.localizedMessage ?: "Error getting job listings, please try refreshing"))
             }
@@ -124,7 +127,6 @@ class Repository(application: Application): GitJobsRepository {
                     }
                 } else {
                     Log.d("Elijah", "Retrofit unsuccesful")
-
                     result.postValue(ApiResponse.Error(message = response.message()))
                 }
             }

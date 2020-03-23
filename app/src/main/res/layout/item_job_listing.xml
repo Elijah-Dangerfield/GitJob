@@ -56,11 +56,12 @@
 
     <com.like.LikeButton
         android:id="@+id/btn_save"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
         android:layout_marginEnd="16dp"
+        android:padding="10dp"
         app:circle_start_color="@color/colorPrimary"
-        app:icon_size="25dp"
+        app:icon_size="15dp"
         app:icon_type="heart"
         app:layout_constraintBottom_toBottomOf="@+id/cardView"
         app:layout_constraintEnd_toEndOf="parent"

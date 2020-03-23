@@ -89,7 +89,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             ib_clear_text.goneIf(it.isEmpty())
             rv_search.adapter = if(it.isNotEmpty()) autoCompleteAdapter else searchAdapter
             autoCompleteAdapter.terms = terms.filter {term ->
-                Log.d("Elijah", "filtering based on containing: ${etv_search.text.toString().trim().toLowerCase()}")
                 term.toLowerCase().contains(etv_search.text.toString().trim().toLowerCase())
             }
 

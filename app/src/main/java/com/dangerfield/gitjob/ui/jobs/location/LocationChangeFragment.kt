@@ -75,7 +75,6 @@ class LocationChangeFragment : DialogFragment() {
     }
 
     private fun onSelectLocation(location: String) {
-        Log.d("Elijah", "Clicked a Location")
         locationChangeViewModel.userState.value = UserState.LOCATION_CHOSEN
         addedLocationsAdapter.selectedLocation = AddedLocation(location)
     }
@@ -134,7 +133,6 @@ class LocationChangeFragment : DialogFragment() {
         locationChangeViewModel.userState.observe(viewLifecycleOwner, Observer {
             ib_clear_text.goneIf(it != UserState.TYPING)
             btn_done.goneIf(it != UserState.LOCATION_CHOSEN)
-            Log.d("Elijah", "User state: ${it}")
             when(it) {
                 UserState.TYPING -> enterTypingState()
                 UserState.SEARCHED -> enterSearchedState()

@@ -45,7 +45,6 @@ class AddedLocationsAdapter(private val context: Context, val persister: Searche
 
         init {
             termButton.setOnClickListener {
-                Log.d("Elijah", "Clicked!!!")
                 val location = searches[adapterPosition]
                 onSelectTerm(location.location)
             }

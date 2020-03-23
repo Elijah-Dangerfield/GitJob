@@ -18,9 +18,7 @@ import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.ui.jobs.filter.FiltersModal
 import com.dangerfield.gitjob.ui.jobs.location.LocationChangeFragment
 import com.dangerfield.gitjob.ui.jobs.search.SearchFragment
-import com.dangerfield.gitjob.util.goneIf
-import com.dangerfield.gitjob.util.hasLocationPermission
-import com.dangerfield.gitjob.util.requestLocationPermission
+import com.dangerfield.gitjob.util.*
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_jobs.*
 import kotlinx.android.synthetic.main.item_jobs_filter.view.*
@@ -75,10 +73,8 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
 
         if(requestCode == LOCATION_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Log.d("Elijah", "Got permission accepted")
                 requestUserCity()
             } else {
-                Log.d("Elijah", "Got permission denied")
             }
         }
     }
@@ -133,8 +129,18 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
             swipe_refresh_layout.isRefreshing = (it is Resource.Loading)
 
             when (it) {
-                is Resource.Success ->  jobsAdapter.jobs = it.data!!
+                is Resource.Success ->  {
+                    jobsAdapter.jobs = it.data!!
+                    console.log("got success in view layer with ${it.data.size} results")
+                }
+
+                is Resource.Loading ->  {
+                    if(!it.data.isNullOrEmpty()) { jobsAdapter.jobs = it.data }
+                }
+
                 is Resource.Error -> {
+                    console.log("got error in view")
+
                     if(it.errorType == GitHubErrorMessage.BAD_LOCATION) {
                         jobsViewModel.setSelectedLocation(null)
                     }else if (it.errorType == GitHubErrorMessage.BAD_SEARCH) {
