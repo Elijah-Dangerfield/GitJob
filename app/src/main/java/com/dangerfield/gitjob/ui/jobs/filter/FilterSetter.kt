@@ -4,6 +4,6 @@ import com.dangerfield.gitjob.ui.jobs.feed.Filter
 
 interface FilterSetter {
     fun onSetFilter(filter: Filter? = null)
-    fun onSetCity(city: String)
+    fun onSetCity(city: String?)
     fun onSetSearchTerm(term: String)
 }

@@ -11,6 +11,8 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -66,7 +68,6 @@ fun EditText.openKeyboard() {
     val imm = this.context.getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY)
 }
-
 
 
 fun String.removeHtml(): String {

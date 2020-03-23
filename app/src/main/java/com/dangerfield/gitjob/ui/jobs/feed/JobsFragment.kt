@@ -27,23 +27,15 @@ import kotlinx.android.synthetic.main.item_jobs_filter.view.*
 import kotlinx.android.synthetic.main.toolbar_jobs.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class JobsFragment: Fragment(R.layout.fragment_jobs),
-    FilterSetter {
-
-    private val jobsAdapter: JobsAdapter by lazy {
-        JobsAdapter(
-            context!!,
-            jobsViewModel
-        )
-    }
+class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
 
     private val jobsViewModel : JobsViewModel by viewModel()
 
+
+    private val jobsAdapter: JobsAdapter by lazy { JobsAdapter(context!!, jobsViewModel) }
+
     private val filterSheet by lazy { {
-        FiltersModal.newInstance(
-            this,
-            jobsViewModel.filter.value
-        )
+        FiltersModal.newInstance(this, jobsViewModel.filter.value)
     }}
 
     private val newLocationChangeFragment
@@ -57,9 +49,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
     }()}
 
     private val newSearchFragment =  { {
-        SearchFragment.newInstance(
-            this
-        )
+        SearchFragment.newInstance(this)
     }()}
 
     private val LOCATION_PERMISSION = 1998
@@ -93,13 +83,9 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
         }
     }
 
-    override fun onSetSearchTerm(term: String) {
-        jobsViewModel.setSearchTerm(term)
-    }
+    override fun onSetSearchTerm(term: String) { jobsViewModel.setSearchTerm(term) }
 
-
-
-    override fun onSetCity(city: String) {
+    override fun onSetCity(city: String?) {
         jobsViewModel.setSelectedLocation(city, refresh = true)
     }
 
@@ -111,8 +97,6 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
                 if(it.isNullOrEmpty()) resources.getString(R.string.app_name) else it
         })
     }
-
-
 
     override fun onSetFilter(filter: Filter?) {
         jobsViewModel.filter.value = filter
@@ -179,7 +163,12 @@ class JobsFragment: Fragment(R.layout.fragment_jobs),
             toolbar_search_term.goneIf(included_search_term_view.visibility == View.GONE
                     && included_filter_view.visibility == View.GONE)
 
-            if(it != null) included_filter_view.tv_filter.text = it.jobtype
+            if(it != null) {
+                included_filter_view.tv_filter.text = it.jobtype
+                jobsAdapter.jobs = jobsAdapter.jobs.filter {job -> job.type == it.jobtype }
+            }else {
+                jobsViewModel.jobsForcePost() // update live data so observer will update adapter
+            }
         })
     }
 

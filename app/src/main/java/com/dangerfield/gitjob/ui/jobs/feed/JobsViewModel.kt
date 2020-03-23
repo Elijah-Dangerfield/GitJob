@@ -39,6 +39,9 @@ class JobsViewModel(private val repository: Repository) : ViewModel(),
 
     fun getSearchTerm() = searchTerm
 
+    fun jobsForcePost() {
+        jobs.value = jobs.value
+    }
 
     fun getJobs(): MutableLiveData<Resource<List<JobListing>>> {
         if (jobs.value?.data.isNullOrEmpty()) {

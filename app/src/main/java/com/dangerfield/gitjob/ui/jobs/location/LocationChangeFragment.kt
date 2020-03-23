@@ -28,6 +28,7 @@ class LocationChangeFragment : DialogFragment() {
     lateinit var mFilterSetter: FilterSetter
     var currentDeterminedLocation: String? = null
     var currentSelectedLocation: String? = null
+    private val allLocations = "All Locations"
 
     private val locationChangeViewModel: LocationChangeViewModel by viewModel()
 
@@ -60,8 +61,13 @@ class LocationChangeFragment : DialogFragment() {
     }
 
     private fun searchFor(term: String) {
-        addedLocationsAdapter.searches.add(AddedLocation(term))
-        onSelectLocation(term)
+        val location =
+            if(term.isNullOrEmpty()) AddedLocation(allLocations)
+            else AddedLocation(term)
+        if(!addedLocationsAdapter.searches.contains(location)){
+            addedLocationsAdapter.searches.add(location)
+        }
+        onSelectLocation(location.location)
     }
 
     private val emptyResultsList: (() -> List<String>) =  {
@@ -122,7 +128,6 @@ class LocationChangeFragment : DialogFragment() {
                 }
             }
         })
-
     }
 
     private fun observeUserState() {
@@ -175,8 +180,9 @@ class LocationChangeFragment : DialogFragment() {
             if(location == addedLocationsAdapter.currentLocationString){
                 location = addedLocationsAdapter.currentDeterminedLocation?.location
             }
-            mFilterSetter.onSetCity(location!!)
-            locationChangeViewModel.saveSearchedLocation(AddedLocation(location))
+            locationChangeViewModel.saveSearchedLocation(AddedLocation(location!!))
+            if(location == allLocations){ location = null }
+            mFilterSetter.onSetCity(location)
             this.dismiss()
         }
         ib_clear_text.setOnClickListener { (input_location as TextView).text = "" }
