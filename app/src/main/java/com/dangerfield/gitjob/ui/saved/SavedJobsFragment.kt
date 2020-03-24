@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
-import com.dangerfield.gitjob.ui.JobDetailFragment
+import com.dangerfield.gitjob.ui.shared.JobDetailFragment
 import com.dangerfield.gitjob.ui.jobs.feed.ListingSaver
 import com.dangerfield.gitjob.util.console
 import kotlinx.android.synthetic.main.fragment_saved_jobs.*

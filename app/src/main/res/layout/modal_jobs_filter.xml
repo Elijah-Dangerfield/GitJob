@@ -1,55 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:background="@drawable/background_bottom_sheet"
-        android:id="@+id/frameLayout"
-        android:layout_width="match_parent"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/frameLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_bottom_sheet"
+    tools:context=".ui.jobs.filter.FiltersModal">
+
+    <Button
+        android:id="@+id/btn_full_time"
+        style="@style/AppSelectorButton"
+        android:layout_width="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="16dp"
+        android:text="Full Time"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingBottom="50dp"
-        tools:context=".ui.jobs.filter.FiltersModal">
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent=".5" />
 
-        <Button
-            android:id="@+id/btn_full_time"
-            style="@style/AppSelectorButton"
-            android:layout_width="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginEnd="16dp"
-            android:text="Full Time"
-            app:layout_constraintEnd_toStartOf="@+id/guideline"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent=".5" />
-
-        <Button
-            android:id="@+id/btn_part_time"
-            style="@style/AppSelectorButton"
-            android:layout_width="0dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:text="Part Time"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toTopOf="@+id/btn_full_time" />
+    <Button
+        android:id="@+id/btn_part_time"
+        style="@style/AppSelectorButton"
+        android:layout_width="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:text="Part Time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/btn_full_time" />
 
     <Button
         android:id="@+id/btn_set_filters"
         style="@style/AppButton"
         android:layout_width="0dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="42dp"
         android:layout_marginTop="42dp"
-        android:layout_marginEnd="64dp"
+        android:layout_marginEnd="42dp"
         android:text="Set Filters"
         app:layout_constraintEnd_toEndOf="@+id/btn_part_time"
         app:layout_constraintStart_toStartOf="@+id/btn_full_time"
         app:layout_constraintTop_toBottomOf="@+id/btn_full_time" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@null"
+        android:text="@android:string/cancel"
+        android:textAllCaps="false"
+        android:textColor="@android:color/holo_red_dark"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/btn_set_filters"
+        app:layout_constraintStart_toStartOf="@+id/btn_set_filters"
+        app:layout_constraintTop_toBottomOf="@+id/btn_set_filters" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 

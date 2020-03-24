@@ -17,7 +17,7 @@ import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
-import com.dangerfield.gitjob.ui.JobDetailFragment
+import com.dangerfield.gitjob.ui.shared.JobDetailFragment
 import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.ui.jobs.filter.FiltersModal
 import com.dangerfield.gitjob.ui.jobs.location.LocationChangeFragment
@@ -187,12 +187,17 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter, ListingSaver
                 }
 
                 is Resource.Error -> {
-                    console.log("got error in view")
 
                     if(it.errorType == GitHubErrorMessage.BAD_LOCATION) {
                         jobsViewModel.setSelectedLocation(null)
+                        console.log("got error in view with bad location type")
+
                     }else if (it.errorType == GitHubErrorMessage.BAD_SEARCH) {
                         jobsViewModel.setSearchTerm(null)
+                        console.log("got error in view with bad search type")
+                    }else {
+                        console.log("got error in view with unknwon type")
+
                     }
                     Toast.makeText(context, it.message, Toast.LENGTH_LONG).show()
                 }

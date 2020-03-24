@@ -20,12 +20,8 @@ class FiltersModal : BottomSheetDialogFragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        val view = inflater.inflate(R.layout.modal_jobs_filter, container, false)
-//        view.clipToOutline = true
-        return view
+        return inflater.inflate(R.layout.modal_jobs_filter, container, false)
     }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,16 +37,15 @@ class FiltersModal : BottomSheetDialogFragment() {
         }
 
         btn_set_filters.setOnClickListener {
-            //if both options are selected there is no filter, otherwise give
-            //back the string used as the filter in the api call
             when {
                 btn_full_time.isSelected -> mCallBack?.onSetFilter(Filter.FULL_TIME)
                 btn_part_time.isSelected -> mCallBack?.onSetFilter(Filter.PART_TIME)
                 else ->  mCallBack?.onSetFilter(null)
-
             }
             this.dismiss()
         }
+
+        btn_cancel.setOnClickListener { this.dismiss() }
     }
 
     override fun onResume() {

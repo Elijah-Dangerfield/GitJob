@@ -1,4 +1,4 @@
-package com.dangerfield.gitjob.ui
+package com.dangerfield.gitjob.ui.shared
 
 
 import android.content.Intent
@@ -12,9 +12,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.ui.jobs.feed.ListingSaver
-import com.dangerfield.gitjob.ui.saved.ModalOption
 import com.dangerfield.gitjob.ui.saved.OptionsHandler
-import com.dangerfield.gitjob.ui.saved.SavedOptionsModal
 import com.dangerfield.gitjob.util.goneIf
 import com.dangerfield.gitjob.util.isShowing
 import com.like.LikeButton
@@ -53,9 +51,13 @@ class JobDetailFragment : Fragment(R.layout.fragment_job_detail) {
             .fitCenter()
             .diskCacheStrategy(DiskCacheStrategy.ALL)
             .into(iv_job)
+
         tv_company_name.text = mJobListing.company
         tv_title.text = mJobListing.title
-        tv_description.text = mJobListing.description
+        tv_description.text =
+            if(mJobListing.description.isNullOrEmpty()) "No descrition provided from ${mJobListing.company}"
+            else mJobListing.description
+
         tv_job_type.text = mJobListing.type
         tv_how_to_apply.text = mJobListing.how_to_apply
         tv_company_name_header.text = mJobListing.company
