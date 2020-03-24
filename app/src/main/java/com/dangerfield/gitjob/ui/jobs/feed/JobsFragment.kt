@@ -65,7 +65,6 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter, ListingSaver
 
     private val LOCATION_PERMISSION = 1998
 
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 

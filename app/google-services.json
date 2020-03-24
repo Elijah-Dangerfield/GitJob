@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "62043319700",
+    "firebase_url": "https://gitjob-7ec17.firebaseio.com",
+    "project_id": "gitjob-7ec17",
+    "storage_bucket": "gitjob-7ec17.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62043319700:android:03f0311f7344d889b2f381",
+        "android_client_info": {
+          "package_name": "com.dangerfield.gitjob"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "62043319700-29r2d39j4bqqvr44t27mu7852eqr3htq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBtCaUyjwFasqrwkAw6RkzMuxChaihDf3Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "62043319700-29r2d39j4bqqvr44t27mu7852eqr3htq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

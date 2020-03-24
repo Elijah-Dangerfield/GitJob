@@ -54,6 +54,12 @@ abstract class NetworkBoundResource<ResultType, CallParameters> {
                     console.log("successful refresh in network bound resource, saving results")
 
                     saveCallResult(response.data!!)
+                    val dbSource = loadFromDb()
+
+                    result.addSource(dbSource) { newData ->
+                        setValue(Resource.Success(data = newData))
+                        result.removeSource(dbSource)
+                    }
                 }
 
                 is ApiResponse.Empty -> {
