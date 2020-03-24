@@ -7,13 +7,16 @@ import android.view.View
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dangerfield.gitjob.R
+import com.dangerfield.gitjob.model.JobListing
 import com.dangerfield.gitjob.model.SavedJob
+import com.dangerfield.gitjob.ui.JobDetailFragment
+import com.dangerfield.gitjob.ui.jobs.feed.ListingSaver
 import com.dangerfield.gitjob.util.console
 import kotlinx.android.synthetic.main.fragment_saved_jobs.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
 class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
-    OptionsPresenter {
+    OptionsHandler {
 
     private val savedOptionsModal by lazy { {
         SavedOptionsModal.newInstance(this)
@@ -28,7 +31,9 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
         SavedJobsAdapter(
             context!!,
             this
-        )
+        ) {
+            navigateToJobDetail(it.toJob(saved = true))
+        }
     }
 
     private val savedJobsViewModel : SavedJobsViewModel by viewModel()
@@ -63,5 +68,23 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
         rv_saved_jobs.layoutManager = LinearLayoutManager(context)
         rv_saved_jobs.adapter = savedJobsAdapter
     }
+
+    private fun navigateToJobDetail(job: JobListing) {
+        parentFragmentManager
+            .beginTransaction().add(R.id.content, JobDetailFragment.newInstance(job, object: ListingSaver {
+                override fun saveListing(listing: JobListing) {
+                    savedJobsViewModel.resaveJobe(listing)
+                    listing.saved = true
+                }
+
+                override fun unsaveListing(listing: JobListing) {
+                    savedJobsViewModel.deleteSavedJob(listing.toSaveable())
+                    listing.saved = false
+                }
+            }, this))
+            .addToBackStack(null)
+            .commit()
+    }
+
 
 }

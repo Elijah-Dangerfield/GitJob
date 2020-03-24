@@ -11,50 +11,64 @@ import com.dangerfield.gitjob.util.goneIf
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.android.synthetic.main.modal_saved_options.*
 
+enum class ModalOption {
+    DELETE, SHARE
+}
+
 class SavedOptionsModal : BottomSheetDialogFragment() {
 
-    lateinit var optionsPresenter: OptionsPresenter
+    lateinit var optionsHandler: OptionsHandler
     lateinit var currentSavedJob: SavedJob
+    var mOptions: List<ModalOption>? = null
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.modal_saved_options, container, false)
-        return view
-
+        return inflater.inflate(R.layout.modal_saved_options, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         tv_cancel.setOnClickListener { this.dismiss() }
         tv_delete.setOnClickListener {
-            optionsPresenter.onDelete(currentSavedJob)
+            optionsHandler.onDelete(currentSavedJob)
             this.dismiss()
         }
 
-        tv_share.setOnClickListener { optionsPresenter.onShare(currentSavedJob) }
-
+        tv_share.setOnClickListener { optionsHandler.onShare(currentSavedJob) }
     }
 
     override fun onResume() {
         super.onResume()
         tv_share.goneIf(currentSavedJob.url == null)
 
+        if(mOptions != null) {
+            applyOptions()
+        } else {
+            tv_delete.visibility = View.VISIBLE
+            tv_share.visibility = View.VISIBLE
+        }
+    }
+
+    private fun applyOptions() {
+        tv_share.goneIf(!mOptions!!.contains(ModalOption.SHARE))
+        tv_delete.goneIf(!mOptions!!.contains(ModalOption.DELETE))
     }
 
     companion object {
-        fun newInstance(optionsPresenter: OptionsPresenter): SavedOptionsModal {
+        fun newInstance(optionsHandler: OptionsHandler): SavedOptionsModal {
             val fragment = SavedOptionsModal()
-            fragment.optionsPresenter = optionsPresenter
+            fragment.optionsHandler = optionsHandler
             return fragment
         }
     }
 
-    fun show(fragmentManager: FragmentManager, savedJob: SavedJob){
+    fun show(fragmentManager: FragmentManager, savedJob: SavedJob, options: List<ModalOption>? = null){
         this.show(fragmentManager, "optionsModal")
         currentSavedJob = savedJob
+        mOptions = options
     }
-
 }

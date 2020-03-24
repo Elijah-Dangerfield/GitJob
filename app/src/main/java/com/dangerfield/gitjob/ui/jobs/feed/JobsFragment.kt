@@ -2,6 +2,7 @@ package com.dangerfield.gitjob.ui.jobs.feed
 
 
 import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
@@ -15,10 +16,15 @@ import com.dangerfield.gitjob.api.GitHubErrorMessage
 import com.dangerfield.gitjob.api.Resource
 import com.dangerfield.gitjob.model.AddedLocation
 import com.dangerfield.gitjob.model.JobListing
+import com.dangerfield.gitjob.model.SavedJob
+import com.dangerfield.gitjob.ui.JobDetailFragment
 import com.dangerfield.gitjob.ui.jobs.filter.FilterSetter
 import com.dangerfield.gitjob.ui.jobs.filter.FiltersModal
 import com.dangerfield.gitjob.ui.jobs.location.LocationChangeFragment
 import com.dangerfield.gitjob.ui.jobs.search.SearchFragment
+import com.dangerfield.gitjob.ui.saved.ModalOption
+import com.dangerfield.gitjob.ui.saved.OptionsHandler
+import com.dangerfield.gitjob.ui.saved.SavedOptionsModal
 import com.dangerfield.gitjob.util.*
 import com.google.android.gms.location.LocationServices
 import kotlinx.android.synthetic.main.fragment_jobs.*
@@ -26,14 +32,18 @@ import kotlinx.android.synthetic.main.item_jobs_filter.view.*
 import kotlinx.android.synthetic.main.toolbar_jobs.view.*
 import org.koin.android.viewmodel.ext.android.viewModel
 
-class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
+class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter, ListingSaver, OptionsHandler {
 
     private val jobsViewModel : JobsViewModel by viewModel()
 
-
-    private val jobsAdapter: JobsAdapter by lazy { JobsAdapter(context!!, jobsViewModel) {
+    private val jobsAdapter: JobsAdapter by lazy { JobsAdapter(context!!, this) {
         navigateToJobDetail(it)
     } }
+
+    private val savedOptionsModal by lazy { {
+        SavedOptionsModal.newInstance(this)
+    }()}
+
 
     private val filterSheet by lazy { {
         FiltersModal.newInstance(this, jobsViewModel.filter.value)
@@ -82,11 +92,46 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
         }
     }
 
+    override fun saveListing(listing: JobListing) {
+        jobsViewModel.saveListing(listing)
+        val jobFound = jobsAdapter.jobs.find { job -> job.id == listing.id}
+        if(jobFound != null) {
+            jobFound.saved = true
+            jobsAdapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun unsaveListing(listing: JobListing) {
+        jobsViewModel.unsaveListing(listing)
+        val jobFound = jobsAdapter.jobs.find { job -> job.id == listing.id}
+        if(jobFound != null) {
+            jobFound.saved = false
+            jobsAdapter.notifyDataSetChanged()
+        }
+    }
+
     override fun onSetSearchTerm(term: String) { jobsViewModel.setSearchTerm(term) }
 
     override fun onSetCity(city: String?) {
         jobsViewModel.setSelectedLocation(city, refresh = true)
     }
+
+    override fun presentOptions(savedJob: SavedJob) {
+        savedOptionsModal.show(parentFragmentManager, savedJob, listOf(ModalOption.SHARE))
+    }
+
+    override fun onShare(savedJob: SavedJob) {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_SUBJECT, "Check out this great job I found on Git Job")
+            putExtra(Intent.EXTRA_TEXT, savedJob.url!!)
+            type = "text/plain"
+        }
+
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)    }
+
+    override fun onDelete(savedJob: SavedJob) {/*No Op*/}
 
     private fun observeLocation() {
         jobsViewModel.getSelectedLocation().observe(viewLifecycleOwner, Observer {
@@ -221,7 +266,7 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter {
 
     private fun navigateToJobDetail(job: JobListing) {
         parentFragmentManager
-            .beginTransaction().add(R.id.content, JobDetailFragment.newInstance(job))
+            .beginTransaction().add(R.id.content, JobDetailFragment.newInstance(job, this, this))
             .addToBackStack(null)
             .commit()
     }

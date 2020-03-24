@@ -13,13 +13,13 @@ import com.bumptech.glide.Glide
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.model.SavedJob
 import kotlinx.android.synthetic.main.item_saved_job_listing.view.*
-interface OptionsPresenter{
+interface OptionsHandler{
     fun presentOptions(savedJob: SavedJob)
     fun onShare(savedJob: SavedJob)
     fun onDelete(savedJob: SavedJob)
 }
 
-class SavedJobsAdapter(private val context: Context, private val optionsPresenter: OptionsPresenter): RecyclerView.Adapter<SavedJobsAdapter.ViewHolder>() {
+class SavedJobsAdapter(private val context: Context, private val optionsHandler: OptionsHandler, val onItemClicked : ((SavedJob) -> Unit)): RecyclerView.Adapter<SavedJobsAdapter.ViewHolder>() {
 
     var jobs = listOf<SavedJob>()
         set(value) {
@@ -34,8 +34,11 @@ class SavedJobsAdapter(private val context: Context, private val optionsPresente
         val options: ImageButton = view.ib_details
 
         init {
+            this.itemView.setOnClickListener {
+                onItemClicked(jobs[adapterPosition])
+            }
             options.setOnClickListener {
-                optionsPresenter.presentOptions(jobs[adapterPosition])
+                optionsHandler.presentOptions(jobs[adapterPosition])
             }
         }
 

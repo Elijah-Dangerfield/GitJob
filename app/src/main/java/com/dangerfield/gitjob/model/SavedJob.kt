@@ -24,4 +24,8 @@ data class SavedJob(
     constructor() : this(
         "","","","","","","","","","",""
     )
+
+    fun toJob(saved: Boolean = false): JobListing {
+        return JobListing(this.company,this.company_logo, this.company_url, this.created_at, this.description,this.how_to_apply, this.id, this.location, this.title, this.type, this.url,  saved)
+    }
 }

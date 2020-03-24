@@ -13,8 +13,7 @@ enum class Filter(val jobtype: String){
     PART_TIME("Part Time")
 }
 
-class JobsViewModel(private val repository: Repository) : ViewModel(),
-    ListingSaver {
+class JobsViewModel(private val repository: Repository) : ViewModel(){
 
 
     private var jobs = MutableLiveData<Resource<List<JobListing>>>()
@@ -63,11 +62,11 @@ class JobsViewModel(private val repository: Repository) : ViewModel(),
 
     fun saveLocation(location: AddedLocation) { repository.saveSearchedLocation(location) }
 
-    override fun saveListing(listing: JobListing) {
+    fun saveListing(listing: JobListing) {
         repository.saveJob(listing.toSaveable())
     }
 
-    override fun unsaveListing(listing: JobListing) {
+    fun unsaveListing(listing: JobListing) {
         repository.unsaveJob(listing.toSaveable())
     }
 }

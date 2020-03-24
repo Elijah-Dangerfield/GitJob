@@ -5,43 +5,63 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:clickable="true"
     android:background="@android:color/white"
-    >
+    android:focusable="true">
+
+
+    <FrameLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="52dp"
+        android:background="#ffffff"
+        android:stateListAnimator="@animator/toolbar_elevation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </FrameLayout>
 
     <ImageButton
         android:id="@+id/ib_back"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:background="@drawable/ic_arrow_back"
+        android:elevation="6dp"
         android:padding="8dp"
-        app:layout_constraintBottom_toTopOf="@+id/guideline2"
+        app:layout_constraintBottom_toBottomOf="@+id/header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline2"
+    <TextView
+        android:id="@+id/tv_company_name_header"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="?android:attr/actionBarSize" />
+        android:layout_marginStart="5dp"
+        android:elevation="6dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/header"
+        app:layout_constraintEnd_toStartOf="@+id/ib_more"
+        app:layout_constraintStart_toEndOf="@+id/ib_back"
+        app:layout_constraintTop_toTopOf="@+id/header" />
 
     <ScrollView
+        android:id="@+id/scrollview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/guideline2" >
+        app:layout_constraintTop_toBottomOf="@+id/header">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/root_job_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@android:color/white"
-            android:paddingBottom="100dp"
-            tools:context=".ui.jobs.feed.JobDetailFragment">
+            tools:context=".ui.JobDetailFragment">
 
 
             <ImageView
@@ -66,18 +86,31 @@
                 app:layout_constraintTop_toBottomOf="@+id/iv_job"
                 tools:text="Github" />
 
+
+            <com.like.LikeButton
+                android:id="@+id/btn_save"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginTop="8dp"
+                android:padding="10dp"
+                app:circle_start_color="@color/colorPrimary"
+                app:icon_size="15dp"
+                app:icon_type="heart"
+                app:layout_constraintEnd_toEndOf="@+id/tv_title"
+                app:layout_constraintStart_toStartOf="@+id/tv_title"
+                app:layout_constraintTop_toBottomOf="@+id/tv_job_type" />
+
             <TextView
                 android:id="@+id/tv_description_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="32dp"
                 android:text="Description"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_job_type" />
+                app:layout_constraintTop_toBottomOf="@+id/btn_save" />
 
             <TextView
                 android:id="@+id/tv_description"
@@ -108,6 +141,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:layout_marginBottom="200dp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/tv_description"
                 app:layout_constraintStart_toStartOf="@+id/tv_how_to_apply_title"
                 app:layout_constraintTop_toBottomOf="@+id/tv_how_to_apply_title"
@@ -115,13 +150,16 @@
 
             <TextView
                 android:id="@+id/tv_title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="64dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="64dp"
+                android:textAlignment="center"
                 android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="@+id/iv_job"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.487"
-                app:layout_constraintStart_toStartOf="@+id/iv_job"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_company_name"
                 tools:text="Front End Developer" />
 
@@ -134,20 +172,34 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_title"
                 tools:text="Full Time" />
 
-            <Button
-                android:id="@+id/btn_apply"
-                style="@style/AppButton"
-                android:layout_width="0dp"
-                android:layout_marginStart="64dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="64dp"
-                android:text="Apply"
-                app:layout_constraintEnd_toEndOf="@+id/tv_how_to_apply"
-                app:layout_constraintStart_toStartOf="@+id/tv_how_to_apply"
-                app:layout_constraintTop_toBottomOf="@+id/tv_how_to_apply" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
+
+
+    <Button
+        android:id="@+id/btn_apply"
+        style="@style/AppButton"
+        android:layout_width="0dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="16dp"
+        android:text="Apply"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/ib_more"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/ic_more"
+        android:elevation="6dp"
+        app:layout_constraintBottom_toBottomOf="@+id/header"
+        app:layout_constraintEnd_toEndOf="@+id/header"
+        app:layout_constraintTop_toTopOf="@+id/header" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 

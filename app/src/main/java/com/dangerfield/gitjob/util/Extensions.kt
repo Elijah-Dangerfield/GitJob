@@ -4,12 +4,14 @@ import android.Manifest
 import android.app.Activity
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Rect
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ScrollView
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
@@ -62,6 +64,12 @@ fun EditText.onTextChanged(action: ((text: String) -> Unit)){
             action(p0.toString())
         }
     })
+}
+
+fun ScrollView.isShowing(view: View): Boolean {
+    var rect = Rect()
+    this.getHitRect(rect)
+    return view.getLocalVisibleRect(rect)
 }
 
 fun EditText.openKeyboard() {
