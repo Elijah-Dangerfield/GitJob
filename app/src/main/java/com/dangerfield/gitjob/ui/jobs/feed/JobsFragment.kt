@@ -256,6 +256,8 @@ class JobsFragment: Fragment(R.layout.fragment_jobs), FilterSetter, ListingSaver
                     })
                 }else {
                     Log.d("Elijah", "error getting user location from android")
+                    Toast.makeText(context, "Could not obtain location, showing all listings", Toast.LENGTH_LONG).show()
+                    included_toolbar.tv_location.text = resources.getString(R.string.app_name)
                 }
             }
         }else{

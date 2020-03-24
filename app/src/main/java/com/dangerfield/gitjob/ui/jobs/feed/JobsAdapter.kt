@@ -38,13 +38,12 @@ class JobsAdapter(private val context: Context, val persistance: ListingSaver, v
             saveButton.setOnLikeListener(object: OnLikeListener {
                 override fun liked(likeButton: LikeButton?) {
                     persistance.saveListing(jobs[adapterPosition])
-                    jobs[adapterPosition].saved = true
-                    notifyDataSetChanged()
+                    //jobs[adapterPosition].saved = true
+                   // notifyDataSetChanged()
                 }
                 override fun unLiked(likeButton: LikeButton?) {
+                    //jobs[adapterPosition].saved = false
                     persistance.unsaveListing(jobs[adapterPosition])
-                    jobs[adapterPosition].saved = false
-                    notifyDataSetChanged()
                 }
             })
         }

@@ -27,10 +27,6 @@ class JobDetailFragment : Fragment(R.layout.fragment_job_detail) {
     lateinit var mPersister: ListingSaver
     lateinit var optionsHandler: OptionsHandler
 
-    private val savedOptionsModal by lazy { {
-        SavedOptionsModal.newInstance(optionsHandler)
-    }()}
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

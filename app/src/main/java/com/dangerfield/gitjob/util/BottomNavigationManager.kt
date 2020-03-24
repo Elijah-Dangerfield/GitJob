@@ -2,12 +2,13 @@ package com.dangerfield.gitjob.util
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
 import com.dangerfield.gitjob.R
 import com.dangerfield.gitjob.ui.jobs.feed.JobsFragment
 import com.dangerfield.gitjob.ui.saved.SavedJobsFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class BottomNavigationManager(val activity: AppCompatActivity, val container: Int) {
+class BottomNavigationManager(val activity: AppCompatActivity, val container: Int, val bottomNavigationView: BottomNavigationView) {
 
     private val jobsFragment = JobsFragment()
     private val savedJobsFragment = SavedJobsFragment()
@@ -32,11 +33,13 @@ class BottomNavigationManager(val activity: AppCompatActivity, val container: In
             }
         }
 
+
+
     init {
         fm.beginTransaction().add(container, savedJobsFragment).hide(savedJobsFragment).commit()
         fm.beginTransaction().add(container, jobsFragment).commit()
+        fm.addOnBackStackChangedListener {
+            bottomNavigationView.goneIf(fm.backStackEntryCount > 0)
+        }
     }
-
-
-
 }

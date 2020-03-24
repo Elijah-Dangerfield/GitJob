@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
 
         bottom_navigation
             .setOnNavigationItemSelectedListener(
-                BottomNavigationManager(this, R.id.content).itemSelectedListener
+                BottomNavigationManager(this, R.id.content, bottom_navigation).itemSelectedListener
             )
     }
 }

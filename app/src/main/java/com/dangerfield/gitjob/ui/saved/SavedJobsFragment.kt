@@ -60,7 +60,10 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
         startActivity(shareIntent)
     }
 
-    override fun onDelete(savedJob: SavedJob) { savedJobsViewModel.deleteSavedJob(savedJob) }
+    override fun onDelete(savedJob: SavedJob) {
+        savedJobsViewModel.deleteSavedJob(savedJob)
+        parentFragmentManager.popBackStackImmediate()
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,6 +88,4 @@ class SavedJobsFragment : Fragment(R.layout.fragment_saved_jobs),
             .addToBackStack(null)
             .commit()
     }
-
-
 }

@@ -198,9 +198,13 @@ class Repository(application: Application): GitJobsRepository {
     fun unsaveJob(jobListing: SavedJob) {
         CoroutineScope(IO).launch {
             db.mainDao().deleteSavedJob(jobListing.id)
+            unsaveJobListing(jobListing.id)
         }
     }
 
+    fun unsaveJobListing(id: String) {
+        db.mainDao().unsaveJobListing(id)
+    }
 
     fun getSearchedTerms() = db.mainDao().getAllSearchedTerms()
 
@@ -215,7 +219,6 @@ class Repository(application: Application): GitJobsRepository {
             db.mainDao().insertSearchedTerm(term)
         }
     }
-
 
     fun getSearchedLocations() = db.mainDao().getAllSearchedLocations()
 

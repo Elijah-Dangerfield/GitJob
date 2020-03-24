@@ -31,6 +31,12 @@ interface JobListingsDao {
     fun deleteAll()
 
     /**
+     * updates single listing, used to notify job feed of a change to saved status
+     */
+    @Query("UPDATE JOB_LISTINGS SET saved=:saved where id = :id ")
+    fun unsaveJobListing(id: String, saved: Boolean = false)
+
+    /**
      * replaces all data in database
      */
     @Transaction
